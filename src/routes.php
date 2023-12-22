@@ -8,6 +8,9 @@ use Slim\Http\Response;
 return function (App $app) {
     $container = $app->getContainer();
 
+    $app->add(new \App\Middlewares\ValidationFailedMiddleware());
+    $app->add(new \App\Middlewares\ErrorMiddleware());
+
     $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");
