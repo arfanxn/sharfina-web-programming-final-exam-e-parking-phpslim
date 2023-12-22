@@ -2,4 +2,15 @@
 
 namespace App\Requests;
 
-class Request extends \Slim\Http\Request {}
+use Psr\Http\Message\ServerRequestInterface as PSRRequestInterface;
+
+class Request
+{
+    protected PSRRequestInterface $psrRequest;
+
+    public function __construct(PSRRequestInterface $psrRequest)
+    {
+        $this->psrRequest = $psrRequest;
+    }
+
+}
