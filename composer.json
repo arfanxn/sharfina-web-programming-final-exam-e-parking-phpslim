@@ -19,6 +19,7 @@
 	"require": {
 		"php": ">=5.6",
 		"monolog/monolog": "^1.17",
+		"rakit/validation": "^1.4",
 		"slim/php-view": "^2.0",
 		"slim/slim": "^3.1",
 		"voku/stringy": "^6.5"
