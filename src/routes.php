@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\UserController;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -13,5 +14,19 @@ return function (App $app) {
 
         // Render index view
         return $container->get('renderer')->render($response, 'index.phtml', $args);
+    });
+
+    $app->group('/api', function (App $app) {
+        /**
+         *  User routes
+         */
+        $app->group('/users', function (App $app) {
+            // $app->get('', function (Request $request, Response $response) {
+            //     var_dump('hello world');
+            //     return $response;
+            // });
+
+            $app->get('/{id}', UserController::class . ':view');
+        });
     });
 };
