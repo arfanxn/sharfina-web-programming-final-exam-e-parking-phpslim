@@ -27,6 +27,14 @@ return [
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
-        ]
+        ],
+
+        // JWT settings
+        'jwt' => [
+            "secret" => "72aebdc4-e82b-456f-bc35-8cd7018ec9c9",
+            "attribute" => "decoded_token_data", // Attribute name to store decoded token data
+            "secure" => false, // Set to true in production
+            "algorithm" => ["HS256"],
+        ],
     ],
 ];
