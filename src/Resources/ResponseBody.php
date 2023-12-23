@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Resources;
+
 use App\Helpers\Arr;
 
 class ResponseBody
@@ -9,7 +11,7 @@ class ResponseBody
     private array $payload;
 
     /**
-     * instantiate instance of Response
+     * instantiate instance of ResponseBody
      *
      * @return self
      */
