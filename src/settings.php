@@ -31,10 +31,10 @@ return [
 
         // JWT settings
         'jwt' => [
-            "secret" => getenv('JWT_SECRET'),
-            "attribute" => getenv('JWT_ATTRIBUTE'), // Attribute name to store decoded token data
-            "secure" => getenv('JWT_SECURE') == 'true' ? true : false, // Set to true in production
-            "algorithm" => [getenv('JWT_ALGORITHM')],
+            'secret' => '72aebdc4-e82b-456f-bc35-8cd7018ec9c9',
+            'attribute' => 'decoded_token_data', // Attribute name to store decoded token data
+            'secure' =>  false, // Set to true in production
+            'algorithm' => ['HS256'],
         ],
     ],
 ];
