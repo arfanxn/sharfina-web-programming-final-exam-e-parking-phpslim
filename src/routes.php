@@ -24,8 +24,14 @@ return function (App $app) {
     });
     */
 
+    /**
+     *  Routes that are excluded from the JWT Authentication process
+     */
     $app->post('/api/users/login', UserController::class . ':login');
 
+    /**
+     *  Routes that are included in the JWT Authentication process
+     */
     $app->group('/api', function (App $app) {
         /**
          *  User routes
