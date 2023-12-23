@@ -8,7 +8,7 @@ class ResponseBody
 {
     private string $status; // eg: 'error' or 'success'
     private string $message;
-    private array $payload;
+    private ?array $payload;
 
     /**
      * instantiate instance of ResponseBody
@@ -45,12 +45,15 @@ class ResponseBody
         return $this;
     }
 
-    public function getPayload(): array
+    public function getPayload(): ?array
     {
         return $this->payload;
     }
     public function addPayload(string $key, mixed $value): self
     {
+        if (!isset($this->payload)) {
+            $this->payload = array();
+        }
         $this->payload = array_replace($this->payload, Arr::dotToAssoc([$key => $value])) ;
         return $this;
     }
