@@ -2,4 +2,7 @@
 
 namespace App\Controllers;
 
-class Controller {}
+class Controller
+{
+    use \App\Traits\ContainerAwareTrait;
+}
