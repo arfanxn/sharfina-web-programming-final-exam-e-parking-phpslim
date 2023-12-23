@@ -2,29 +2,23 @@
 
 namespace App\Requests\User;
 
+use Psr\Http\Message\ServerRequestInterface as PSRRequestInterface;
 use App\Requests\Request;
-use Rakit\Validation\Validator;
 
 class LoginRequest extends Request
 {
-    /**
-     *
-     * @throws \App\Exceptions\ValidationFailedException
-     */
-    public function validate()
-    {
-        $inputs = $this->psrRequest->getParsedBody() ?? [];
+    public string $email;
+    public string $password;
 
-        $validator = new Validator();
-        $validation = $validator->make($inputs, [
+    public function __construct(PSRRequestInterface $psrRequest)
+    {
+        parent::__construct($psrRequest);
+
+        $this->email = $this->getFormData()['email'] ?? '';
+        $this->password  = $this->getFormData()['password'] ?? '';
+        $this->setRules([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        $validation->validate();
-
-        if ($validation->fails()) {
-            throw \App\Exceptions\ValidationFailedException::newFromErrorBag($validation->errors());
-        }
     }
-
 }
