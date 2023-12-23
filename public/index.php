@@ -20,7 +20,7 @@ session_start();
 use Dotenv\Dotenv;
 
 // Load environment variables
-$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 // Instantiate the app
