@@ -20,8 +20,12 @@ session_start();
 use Dotenv\Dotenv;
 
 // Load environment variables
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+try {
+    $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->load();
+} catch (\Throwable $e) {
+    echo 'Error loading .env file: ' . $e->getMessage();
+}
 
 // Instantiate the app
 $settings = require __DIR__ . '/../src/settings.php';
