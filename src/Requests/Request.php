@@ -13,4 +13,9 @@ class Request
         $this->psrRequest = $psrRequest;
     }
 
+    public static function instantiate(PSRRequestInterface $psrRequest): self
+    {
+        return new self($psrRequest);
+    }
+
 }
