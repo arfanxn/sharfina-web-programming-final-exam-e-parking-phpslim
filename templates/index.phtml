@@ -24,10 +24,16 @@
                 margin-bottom: 0;
             }
         </style>
+        <!-- <link href="../public/assets/css/output.css" rel="stylesheet"> -->
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
         <h1>Slim</h1>
         <div>a microframework for PHP</div>
+
+        <p class="text-3xl font-bold underline text-red-600">
+          Hello world!
+        </p>
 
         <?php if (isset($name)) : ?>
             <h2>Hello <?= htmlspecialchars($name); ?>!</h2>
