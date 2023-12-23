@@ -46,7 +46,6 @@ return function (App $app) {
         return new UserService($c->get(UserRepository::class));
     };
     $container[UserController::class] = function ($c) {
-        return new UserController($c->get(UserService::class));
+        return (new UserController($c->get(UserService::class)))->setContainer($c);
     };
-
 };
