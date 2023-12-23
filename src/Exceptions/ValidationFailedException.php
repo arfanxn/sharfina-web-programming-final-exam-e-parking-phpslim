@@ -26,8 +26,6 @@ class ValidationFailedException extends \Exception
      */
     public static function newFromErrorBag(ErrorBag $errors): self
     {
-        $errors->add('pw', '', 'hello world');
-
         $e = new self($errors->firstOfAll()[key($errors->firstOfAll())]);
         $e->setErrors($errors);
         return $e;
