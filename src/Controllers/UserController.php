@@ -10,6 +10,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UserController extends Controller
 {
+    use \App\Traits\ContainerAwareTrait;
+
     private UserService $userService;
 
     public function __construct(UserService $userService)
