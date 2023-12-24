@@ -8,22 +8,23 @@ namespace App\Helpers;
 class Session
 {
     /**
-     * getRedirectData returns the redirect data associated with the session
+     * pullRedirectData returns the redirect data associated with the session then deletes it
      *
      * @return array
      */
-    public static function getRedirectData(): array
+    public static function pullRedirectData(): array
     {
-        return $_SESSION['redirect_data'] ?? [];
+        $data = $_SESSION['redirect_data'] ?? [];
+        self::putRedirectData([]); // clear all redirect data
+        return $data;
     }
-
     /**
-     * getRedirectData sets the redirect data to the session
+     * putRedirectData sets the redirect data to the session
      *
      * @param array $data
      * @return array
      */
-    public static function setRedirectData($data): void
+    public static function putRedirectData(array $data): void
     {
         $_SESSION['redirect_data'] = $data;
     }

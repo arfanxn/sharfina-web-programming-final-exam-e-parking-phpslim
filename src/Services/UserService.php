@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class UserService extends Service
 {
+    use \App\Traits\ContainerAwareTrait;
+
     private UserRepository $userRepository;
 
     public function __construct(UserRepository $userRepository)
@@ -25,7 +28,7 @@ class UserService extends Service
      */
     public function login($email, $password): string
     {
-        $e = \App\Exceptions\ValidationFailedException::newForField('password', 'Invalid credentials');
+        $e = \App\Exceptions\ValidationFailedException::newForField('password', 'These credentials do not match our records.');
 
         $user = $this->userRepository->findByEmail($email);
         // ensure that the user exists
@@ -38,14 +41,17 @@ class UserService extends Service
             throw $e;
         }
 
+        $jwtSetting = $this->getContainer()->get('settings')['jwt'];
         $token = JWT::encode(
             [
+                'id' => $user->getId(),
                 'name' => $user->getName(),
                 'email' => $user->getEmail(),
-                'exp' => time() + (3600 * 1 / 2), // expiration time (30 mins)
+                'iat' => time(),
+                'exp' => time() + intval($jwtSetting['exp_in']),
             ],
-            'secret',
-            'HS256'
+            $jwtSetting['secret'],
+            $jwtSetting['algorithm']
         );
 
         return $token;
@@ -62,5 +68,4 @@ class UserService extends Service
         $user = $this->userRepository->find($id);
         return $user;
     }
-
 }
