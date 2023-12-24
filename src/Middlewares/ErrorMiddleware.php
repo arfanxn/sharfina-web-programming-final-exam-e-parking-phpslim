@@ -16,12 +16,13 @@ class ErrorMiddleware
         try {
             $response = $next($request, $response);
         } catch (\Exception $e) {
+            $statusCode = 500; // represents http status code
             $response = $response->withJson(
-                ResponseBody::instantiate()
-                    ->setStatusAsError()
+                ResponseBody::new()
+                    ->setStatusCode($statusCode)
                     ->setMessage($e->getMessage())
                     ->toArray(),
-                $statusCode =  500
+                $statusCode
             );
         }
 

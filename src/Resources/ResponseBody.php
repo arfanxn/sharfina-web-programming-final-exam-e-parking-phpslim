@@ -6,33 +6,36 @@ use App\Helpers\Arr;
 
 class ResponseBody
 {
-    private string $status; // eg: 'error' or 'success'
+    private int $statusCode; // eg: 422 or 500 or etc...
+    private string $statusText; // eg: 'error' or 'success'
     private string $message;
     private ?array $payload;
 
     /**
-     * instantiate instance of ResponseBody
+     * new instantiates instance of ResponseBody
      *
      * @return self
      */
-    public static function instantiate(): self
+    public static function new(): self
     {
         return new self();
     }
 
-    public function getStatus(): string
+    public function getStatusCode(): int
     {
-        return $this->status;
+        return $this->statusCode;
     }
-    public function setStatusAsError(): self
+
+    public function setStatusCode(int $statusCode): self
     {
-        $this->status = 'error';
+        $this->statusCode  = $statusCode;
+        $this->statusText = $statusCode >= 200 && $statusCode <= 299 ? 'success' : 'error';
         return $this;
     }
-    public function setStatusAsSuccess(): self
+
+    public function getStatusText(): string
     {
-        $this->status = 'success';
-        return $this;
+        return $this->statusText;
     }
 
     public function getMessage(): string
@@ -54,14 +57,15 @@ class ResponseBody
         if (!isset($this->payload)) {
             $this->payload = array();
         }
-        $this->payload = array_replace($this->payload, Arr::dotToAssoc([$key => $value])) ;
+        $this->payload = array_replace($this->payload, Arr::dotToAssoc([$key => $value]));
         return $this;
     }
 
     public function toArray(): array
     {
         $arr =  [
-            'status' => $this->status,
+            'status_code' => $this->statusCode,
+            'status_text' => $this->statusText,
             'message' => $this->message,
         ];
 
@@ -71,5 +75,4 @@ class ResponseBody
 
         return $arr;
     }
-
 }

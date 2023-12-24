@@ -17,8 +17,8 @@ class ValidationFailedMiddleware
         } catch (\App\Exceptions\ValidationFailedException $e) {
             $previousUrl = $_SERVER['HTTP_REFERER'] ?? '/';
             Session::putRedirectData(
-                ResponseBody::instantiate()
-                    ->setStatusAsError()
+                ResponseBody::new()
+                    ->setStatusCode(422)
                     ->setMessage($e->getMessage())
                     ->addPayload('errors', $e->getErrors()->firstOfAll())
                     ->toArray()

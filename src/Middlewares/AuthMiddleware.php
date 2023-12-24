@@ -36,8 +36,8 @@ class AuthMiddleware
             $response = $next($request, $response);
         } catch (\Exception | \App\Exceptions\UnauthorizedException $e) {
             Session::putRedirectData(
-                ResponseBody::instantiate()
-                    ->setStatusAsError()
+                ResponseBody::new()
+                    ->setStatusCode(401)
                     ->setMessage('Unauthorized action, please login.')
                     ->toArray()
             );
