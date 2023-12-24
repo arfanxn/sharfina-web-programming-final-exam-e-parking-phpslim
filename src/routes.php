@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\UserController;
+use App\Middlewares\AuthMiddleware;
 use Slim\App;
 
 use Slim\Http\Request;
@@ -13,23 +14,31 @@ return function (App $app) {
     $app->add(new \App\Middlewares\ValidationFailedMiddleware());
     $app->add(new \App\Middlewares\ErrorMiddleware());
 
+    /*    
     $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message
         $container->get('logger')->info("Slim-Skeleton '/' route");
         // Render index view
         return $container->get('renderer')->render($response, 'index.phtml', $args);
     });
+    */
 
 
     /**
-     *  Routes that are excluded from the JWT Authentication process
+     *  Routes that are excluded from the Authentication process
      */
-    $app->post('/api/users/login', UserController::class . ':login');
+    $app->group('', function (App $app) {
+        $app->group('/users', function (App $app) {
+            $app->get('/login', UserController::class . ':login');
+            $app->post('/handle-login', UserController::class . ':handleLogin');
+        });
+    });
 
     /**
-     *  Routes that are included in the JWT Authentication process
+     *  Routes that are included in the Authentication process
      */
-    $app->group('/api', function (App $app) {
+    $app->group('', function (App $app) use ($container) {
+
         /**
          *  User routes
          */
@@ -40,5 +49,5 @@ return function (App $app) {
 
             $app->get('/{id}', UserController::class . ':view');
         });
-    })->add(new \Tuupola\Middleware\JwtAuthentication($container->get('settings')['jwt']));
+    })->add(AuthMiddleware::class);
 };
