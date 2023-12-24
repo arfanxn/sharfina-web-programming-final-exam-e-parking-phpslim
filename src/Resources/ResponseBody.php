@@ -8,7 +8,7 @@ class ResponseBody
 {
     private int $statusCode; // eg: 422 or 500 or etc...
     private string $statusText; // eg: 'error' or 'success'
-    private string $message;
+    private ?string $message;
     private ?array $payload;
 
     /**
@@ -66,9 +66,11 @@ class ResponseBody
         $arr =  [
             'status_code' => $this->statusCode,
             'status_text' => $this->statusText,
-            'message' => $this->message,
         ];
 
+        if (isset($this->message)) {
+            $arr = array_merge($arr, $this->message);
+        }
         if (isset($this->payload)) {
             $arr = array_merge($arr, $this->payload);
         }
