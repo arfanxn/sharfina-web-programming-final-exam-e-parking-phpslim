@@ -46,10 +46,8 @@ return function (App $app) {
          *  User routes
          */
         $app->group('/users', function (App $app) {
-            // $app->get('', function (Request $request, Response $response) {
-            //     return $response;
-            // });
-
+            $app->delete('/handle-logout', UserController::class . ':handleLogout');
+            $app->get('/', UserController::class . ':index');
             $app->get('/{id}', UserController::class . ':view');
         });
     })->add(AuthMiddleware::class);

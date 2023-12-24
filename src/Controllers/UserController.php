@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Helpers\Session;
 use App\Requests\User\LoginRequest;
+use App\Resources\ResponseBody;
 use App\Services\UserService as UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -19,7 +20,11 @@ class UserController extends Controller
 
     public function login(Request $request, Response $response): Response
     {
-        return $this->getContainer()->renderer->render($response, 'users/login.phtml', Session::pullRedirectData());
+        return $this->getContainer()->renderer->render(
+            $response,
+            'users/login.phtml',
+            Session::pullRedirectData()
+        );
     }
 
     public function handleLogin(Request $request, Response $response): Response
@@ -40,7 +45,21 @@ class UserController extends Controller
             filter_var($jwtSetting['secure'], FILTER_VALIDATE_BOOLEAN),
             true,
         );
+        Session::putRedirectData(ResponseBody::new()
+            ->setStatusCode(200)
+            ->setMessage('Login successfully.')
+            ->toArray());
         return $response->withHeader('Location', '/');
+    }
+
+    public function handleLogout(Request $request, Response $response): Response
+    {
+        setcookie('Authorization', '', time() - 3600, "/"); // remove authorization cookie
+        Session::putRedirectData(ResponseBody::new()
+            ->setStatusCode(200)
+            ->setMessage('Logout successfully.')
+            ->toArray());
+        return $response->withHeader('Location', '/users/login');
     }
 
     public function view(Request $request, Response $response): Response
