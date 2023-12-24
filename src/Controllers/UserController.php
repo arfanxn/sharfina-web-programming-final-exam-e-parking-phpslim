@@ -19,7 +19,7 @@ class UserController extends Controller
 
     public function login(Request $request, Response $response): Response
     {
-        return $this->getContainer()->renderer->render($response, 'user/login.phtml', Session::pullRedirectData());
+        return $this->getContainer()->renderer->render($response, 'users/login.phtml', Session::pullRedirectData());
     }
 
     public function handleLogin(Request $request, Response $response): Response
