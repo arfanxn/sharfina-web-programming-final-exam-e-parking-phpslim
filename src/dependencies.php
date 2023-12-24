@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\DashboardController;
 use App\Controllers\UserController;
 use App\Middlewares\AuthMiddleware;
 use App\Repositories\UserRepository;
@@ -45,7 +46,14 @@ return function (App $app) {
     };
 
     /**
-     *  Container of controllers, services and repositories
+     *  Container of dashboard controller
+     */
+    $container[DashboardController::class] = function ($c) {
+        return (new DashboardController())->setContainer($c);
+    };
+
+    /**
+     *  Container of user controller, service and repository
      */
     $container[UserRepository::class] = function ($c) {
         return new UserRepository($c->get(\PDO::class));

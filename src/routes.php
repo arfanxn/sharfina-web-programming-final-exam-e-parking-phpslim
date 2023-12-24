@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\DashboardController;
 use App\Controllers\UserController;
 use App\Middlewares\AuthMiddleware;
 use Slim\App;
@@ -38,6 +39,8 @@ return function (App $app) {
      *  Routes that are included in the Authentication process
      */
     $app->group('', function (App $app) use ($container) {
+
+        $app->get('/', DashboardController::class);
 
         /**
          *  User routes
