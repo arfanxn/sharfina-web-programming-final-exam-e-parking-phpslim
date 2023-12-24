@@ -69,7 +69,7 @@ class ResponseBody
         ];
 
         if (isset($this->message)) {
-            $arr = array_merge($arr, $this->message);
+            $arr = array_merge($arr, ['message' => $this->message]);
         }
         if (isset($this->payload)) {
             $arr = array_merge($arr, $this->payload);
