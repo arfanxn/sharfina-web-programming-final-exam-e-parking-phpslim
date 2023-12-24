@@ -52,6 +52,16 @@ class ResponseBody
     {
         return $this->payload;
     }
+    public function setPayload(array $payload): self
+    {
+        $this->payload = $payload;
+        return $this;
+    }
+    public function mergePayload(array $payload): self
+    {
+        $this->payload = array_replace($this->payload ?? [], $payload);
+        return $this;
+    }
     public function addPayload(string $key, mixed $value): self
     {
         if (!isset($this->payload)) {
@@ -63,6 +73,10 @@ class ResponseBody
 
     public function toArray(): array
     {
+        if (!isset($this->statusCode)) {
+            $this->setStatusCode(200); // if status code is not set then sets status code to 200
+        }
+
         $arr =  [
             'status_code' => $this->statusCode,
             'status_text' => $this->statusText,
