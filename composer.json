@@ -19,6 +19,7 @@
 	"require": {
 		"php": ">=5.6",
 		"firebase/php-jwt": "^6.10",
+		"jwage/purl": "^0.0.9",
 		"monolog/monolog": "^1.17",
 		"rakit/validation": "^1.4",
 		"slim/php-view": "^2.0",
