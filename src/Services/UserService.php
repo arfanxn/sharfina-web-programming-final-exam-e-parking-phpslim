@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 class UserService extends Service
 {
