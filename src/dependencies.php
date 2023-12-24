@@ -43,7 +43,7 @@ return function (App $app) {
         return new UserRepository($c->get(\PDO::class));
     };
     $container[UserService::class] = function ($c) {
-        return new UserService($c->get(UserRepository::class));
+        return (new UserService($c->get(UserRepository::class)))->setContainer($c);
     };
     $container[UserController::class] = function ($c) {
         return (new UserController($c->get(UserService::class)))->setContainer($c);
