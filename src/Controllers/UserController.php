@@ -40,7 +40,7 @@ class UserController extends Controller
             filter_var($jwtSetting['secure'], FILTER_VALIDATE_BOOLEAN),
             true,
         );
-        return $response->withHeader('Location', '/users/1');
+        return $response->withHeader('Location', '/');
     }
 
     public function view(Request $request, Response $response): Response
