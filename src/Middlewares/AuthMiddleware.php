@@ -22,8 +22,8 @@ class AuthMiddleware
         try {
             $jwtSetting = $this->getContainer()->get('settings')['jwt'];
 
-            $cookieValue = $_COOKIE['Authorization'];
-            if (!isset($cookieValue)) {
+            $cookieValue = $_COOKIE['Authorization'] ?? null;
+            if (is_null($cookieValue)) {
                 throw new \App\Exceptions\UnauthorizedException();
             }
 
