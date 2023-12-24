@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanparking | Login</title>
+    <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
+    <style>
+        /* Your custom styles here */
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <section class="flex items-center w-full h-screen justify-evenly bg-cover bg-center" style="background-image: url('/assets/images/login-background.jpeg');">
+
+        <div class="flex flex-col w-4/12 bg-white rounded-lg border border-gray-300 shadow-lg">
+
+            <!-- <img class="w-24 h-24" src="/assets/images/login-background.jpeg" alt=""> -->
+            <div class="flex flex-col space-y-2 bg-teal-600 w-full py-4 rounded-t-lg px-8">
+                <h1 class="text-4xl font-semibold text-white">Fanparking</h1>
+                <div class="border "></div>
+                <p class="text-2xl font-semibold text-white">Login</p>
+            </div>
+            <div class="px-8 py-8">
+
+                <form class="flex flex-col space-y-4" method="post" action="/users/handle-login" enctype="multipart/form-data">
+                    <?php if (isset($status_code) && in_array($status_code, [401, 422])) : ?>
+                        <div id="errorMessageContainer" class="p-1 border border-red-400 bg-red-300/25 rounded flex justify-between">
+                            <div>
+                                <span class="text-red-500">&#9888;</span>
+                                <small class="font-semibold text-xs text-red-500">
+                                    <?= htmlspecialchars($message); ?>
+                                </small>
+                            </div>
+                            <div class="">
+                                <button id="errorMessageCloseBtn" type="button"><span class="text-red-500">&#10005;</span></button>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <div class="">
+                        <label for="email" class="block text-sm font-semibold">Email</label>
+                        <input type="text" id="email" name="email" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" required placeholder="example@domain.com">
+                    </div>
+                    <div class="">
+                        <label for="password" class="block text-sm font-semibold">Password</label>
+                        <input type="password" id="password" name="password" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" required placeholder="********">
+                    </div>
+                    <div class="ml-auto">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-teal-700/25 focus:border-teal-300">Login</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            (document.getElementById("errorMessageContainer")).addEventListener("click", function() {
+                document.getElementById('errorMessageContainer').remove();
+            });
+
+        });
+    </script>
+</body>
+
+</html>
