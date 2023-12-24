@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\UserController;
+use App\Middlewares\AuthMiddleware;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use Slim\App;
@@ -34,6 +35,13 @@ return function (App $app) {
         // Optional: Set the PDO in exception mode
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
+    };
+
+    /**
+     *  Container of middlewares
+     */
+    $container[AuthMiddleware::class] = function ($c) {
+        return (new AuthMiddleware())->setContainer($c);
     };
 
     /**
