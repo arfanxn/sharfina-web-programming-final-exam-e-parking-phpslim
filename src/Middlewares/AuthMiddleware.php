@@ -42,7 +42,7 @@ class AuthMiddleware
                     ->toArray()
             );
 
-            $response = $response->withRedirect('/users/login');
+            $response = $response->withHeader('Location', '/users/login');
         } finally {
             return $response;
         }

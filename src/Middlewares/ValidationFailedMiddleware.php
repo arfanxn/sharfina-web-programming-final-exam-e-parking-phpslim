@@ -24,7 +24,7 @@ class ValidationFailedMiddleware
                     ->toArray()
             );
 
-            $response = $response->withRedirect($previousUrl);
+            $response = $response->withHeader('Location', $previousUrl);
             return $response;
         }
     }
