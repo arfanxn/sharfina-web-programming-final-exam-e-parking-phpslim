@@ -22,7 +22,7 @@ class Session
      * putRedirectData sets the redirect data to the session
      *
      * @param array $data
-     * @return array
+     * @return void
      */
     public static function putRedirectData(array $data): void
     {
