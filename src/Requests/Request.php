@@ -20,7 +20,7 @@ class Request
         return $this->psrRequest;
     }
 
-    public function getRules($rules): array
+    public function getRules(): array
     {
         return $this->rules ?? [];
     }
@@ -50,25 +50,25 @@ class Request
     }
 
     /**
-    * Retrieve normalized file upload data.
-    *
-    * @return array
-    */
+     * Retrieve normalized file upload data.
+     *
+     * @return array
+     */
     public function getUploadedFiles(): array
     {
         return $this->psrRequest->getUploadedFiles();
     }
 
     /**
-    *
-    * @throws \App\Exceptions\ValidationFailedException
-    */
+     *
+     * @throws \App\Exceptions\ValidationFailedException
+     */
     public function validate()
     {
         $validator = new Validator();
         $validation = $validator->make(
             $this->getFormData(),
-            $this->rules,
+            $this->getRules(),
         );
         $validation->validate();
 
@@ -76,5 +76,4 @@ class Request
             throw \App\Exceptions\ValidationFailedException::newFromErrorBag($validation->errors());
         }
     }
-
 }

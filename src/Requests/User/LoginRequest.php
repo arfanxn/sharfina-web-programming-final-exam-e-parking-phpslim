@@ -2,18 +2,15 @@
 
 namespace App\Requests\User;
 
-use Psr\Http\Message\ServerRequestInterface as PSRRequestInterface;
 use App\Requests\Request;
 
 class LoginRequest extends Request
 {
-    public function __construct(PSRRequestInterface $psrRequest)
+    public function getRules(): array
     {
-        parent::__construct($psrRequest);
-
-        $this->setRules([
+        return [
             'email' => 'required|email',
             'password' => 'required',
-        ]);
+        ];
     }
 }
