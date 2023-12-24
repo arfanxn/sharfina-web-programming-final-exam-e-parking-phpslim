@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Resources\ResponseBody;
@@ -12,17 +13,19 @@ class ValidationFailedMiddleware
     {
         try {
             $response = $next($request, $response);
+            return $response;
         } catch (\App\Exceptions\ValidationFailedException $e) {
-            $response = $response->withJson(
+            $previousUrl = $_SERVER['HTTP_REFERER'] ?? '/';
+            Session::putRedirectData(
                 ResponseBody::instantiate()
                     ->setStatusAsError()
                     ->setMessage($e->getMessage())
                     ->addPayload('errors', $e->getErrors()->firstOfAll())
-                    ->toArray(),
-                $statusCode = 422
+                    ->toArray()
             );
-        }
 
-        return $response;
+            $response = $response->withRedirect($previousUrl);
+            return $response;
+        }
     }
 }
