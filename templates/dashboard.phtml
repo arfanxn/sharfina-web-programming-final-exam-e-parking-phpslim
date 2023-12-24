@@ -14,6 +14,15 @@
 
 <body>
     <h1 class="text-8xl">Dashboard</h1>
+    <?php if (isset($status_code)) : ?>
+        <p class="">Status code: <?= $status_code; ?></p>
+    <?php endif; ?>
+    <?php if (isset($status_text)) : ?>
+        <p class="">Status text: <?= $status_text; ?></p>
+    <?php endif; ?>
+    <?php if (isset($message)) : ?>
+        <p class="">Message: <?= $message; ?></p>
+    <?php endif; ?>
 </body>
 
 </html>
