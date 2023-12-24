@@ -31,19 +31,10 @@ return [
 
         // JWT settings
         'jwt' => [
-            'secret' => 'secret',
-            'attribute' => 'decoded_token_data', // Attribute name to store decoded token data
+            'secret' => '1234-sdfr-2345-htyf',
             'secure' =>  false, // Set to true in production
-            'algorithm' => ['HS256'],
-            'error' => function ($response, $arguments) {
-                return $response->withJson(
-                    \App\Resources\ResponseBody::instantiate()
-                        ->setStatusAsError()
-                        ->setMessage('Unauthorized')
-                        ->toArray(),
-                    401
-                );
-            },
+            'algorithm' => 'HS256',
+            'exp_in' => 3600 * 1, // represents expiry in hours 
         ],
     ],
 ];
