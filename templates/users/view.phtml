@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanparking | Dashboard</title>
+    <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
+    <style>
+        /* Your custom styles here */
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <h1 class="text-8xl">Users View</h1>
+    <?php if (isset($status_code)) : ?>
+        <p class="">Status code: <?= $status_code; ?></p>
+    <?php endif; ?>
+    <?php if (isset($status_text)) : ?>
+        <p class="">Status text: <?= $status_text; ?></p>
+    <?php endif; ?>
+    <?php if (isset($message)) : ?>
+        <p class="">Message: <?= $message; ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($user)) : ?>
+        <br><br>
+        <p class="">User: <?= print_r($user); ?></p>
+    <?php endif; ?>
+</body>
+
+</html>
