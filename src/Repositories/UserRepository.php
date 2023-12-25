@@ -20,32 +20,26 @@ class UserRepository extends Repository
      */
     public function paginate(int $limit, int $offset, ?string $keyword = null): array
     {
-        try {
-            $isWithWhere = (!is_null($keyword) && $keyword != '');
-            $stmt = $this->connection->prepare((new Stringy())
-                ->append('SELECT * FROM users')
-                ->append($isWithWhere ? ' WHERE name LIKE :keyword'  : '')
-                ->append(' LIMIT :limit OFFSET :offset;')
-                ->toString());
-            if ($isWithWhere) {
-                $stmt->bindParam(':keyword', '%' . $keyword . '%', \PDO::PARAM_STR);
-            }
-            $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
-            $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
-            $stmt->execute();
-
-            $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: null;
-            $users = array();
-            foreach ($rows as $row) {
-                array_push($users, (new User())->hydrate($row));
-            }
-
-            return $users;
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
+        $isWithWhere = (!is_null($keyword) && $keyword != '');
+        $stmt = $this->connection->prepare((new Stringy())
+            ->append('SELECT * FROM users')
+            ->append($isWithWhere ? ' WHERE name LIKE :keyword'  : '')
+            ->append(' LIMIT :limit OFFSET :offset;')
+            ->toString());
+        if ($isWithWhere) {
+            $stmt->bindParam(':keyword', '%' . $keyword . '%', \PDO::PARAM_STR);
         }
-        return [];
+        $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: null;
+        $users = array();
+        foreach ($rows as $row) {
+            array_push($users, (new User())->hydrate($row));
+        }
+
+        return $users;
     }
 
     /**

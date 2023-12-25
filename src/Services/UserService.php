@@ -91,8 +91,6 @@ class UserService extends Service
         if (is_null($user)) {
             throw \App\Exceptions\ModelNotFoundException::new(User::class, $id);
         }
-        var_dump('passed here');
-        die;
         return $user->toArray();
     }
 
