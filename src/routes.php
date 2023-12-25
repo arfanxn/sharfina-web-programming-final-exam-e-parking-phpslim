@@ -51,7 +51,7 @@ return function (App $app) {
             $app->get('/{id}', UserController::class . ':view');
             $app->get('/{id}/edit', UserController::class . ':edit');
             $app->put('/{id}/handle-edit', UserController::class . ':update');
-            $app->put('/{id}/handle-delete', UserController::class . ':destroy');
+            $app->delete('/{id}/handle-delete', UserController::class . ':destroy');
         });
     })->add(AuthMiddleware::class);
 };
