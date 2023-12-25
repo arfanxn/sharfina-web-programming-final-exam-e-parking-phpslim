@@ -2,12 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Forms\User\LoginForm;
+use App\Forms\User\UpdateForm;
 use App\Helpers\Session;
-use App\Requests\User\LoginRequest;
+use App\Resources\Pagination;
 use App\Resources\ResponseBody;
 use App\Services\UserService as UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Stringy\Stringy;
 
 class UserController extends Controller
 {
@@ -23,25 +26,27 @@ class UserController extends Controller
         return $this->getContainer()->renderer->render(
             $response,
             'users/login.phtml',
-            Session::pullRedirectData()
+            ResponseBody::new()
+                ->setStatusCode(200)
+                ->mergePayload(Session::pullRedirectData())
+                ->toArray()
         );
     }
 
     public function handleLogin(Request $request, Response $response): Response
     {
-        $request = new LoginRequest($request);
-        $request->validate();
-        $requestForm = $request->getFormData();
+        $form = LoginForm::newFromRequest($request);
+        $form->validate();
 
         $jwtSetting = $this->getContainer()->get('settings')['jwt'];
-        $token = $this->userService->login($requestForm['email'], $requestForm['password']);
+        $token = $this->userService->login($form);
 
         setcookie(
             'Authorization',
             'Bearer ' . $token,
             time() + intval($jwtSetting['exp_in']),
             '/',
-            $request->getPSRRequest()->getUri()->getHost(),
+            $request->getUri()->getHost(),
             filter_var($jwtSetting['secure'], FILTER_VALIDATE_BOOLEAN),
             true,
         );
@@ -62,13 +67,87 @@ class UserController extends Controller
         return $response->withHeader('Location', '/users/login');
     }
 
+    public function index(Request $request, Response $response): Response
+    {
+        $params = $request->getQueryParams();
+        $page = intval($params['page'] ?? 1);
+        $perPage = intval($params['per_page'] ?? 10);
+        $keyword = $params['keyword'] ?? null;
+
+        $users = $this->userService->paginate($page, $perPage, $keyword);
+        $pagination = Pagination::new()->fillMetadata($page, $perPage)->setData($users)->toArray();
+
+        return $this->getContainer()->renderer->render(
+            $response,
+            'users/index.phtml',
+            ResponseBody::new()
+                ->setStatusCode(200)
+                ->setMessage('Successfully retrieved users.')
+                ->mergePayload(Session::pullRedirectData())
+                ->addPayload('pagination', $pagination)
+                ->toArray()
+        );
+    }
+
     public function view(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
-        $user = $this->userService->findById($id);
+        $user = $this->userService->find($id);
 
-        var_dump($user);
+        return $this->getContainer()->renderer->render(
+            $response,
+            'users/view.phtml',
+            ResponseBody::new()
+                ->setStatusCode(200)
+                ->setMessage('Successfully retrieved user.')
+                ->addPayload('user', $user)
+                ->toArray()
+        );
+    }
 
-        return $response;
+    public function edit(Request $request, Response $response): Response
+    {
+        $id = $request->getAttribute('id');
+        $user = $this->userService->find($id);;
+
+        $data = ResponseBody::new()
+            ->mergePayload(Session::pullRedirectData())
+            ->addPayload('user', $user)
+            ->toArray();
+        return $this->getContainer()->renderer->render(
+            $response,
+            'users/edit.phtml',
+            $data
+        );
+    }
+
+    public function update(Request $request, Response $response): Response
+    {
+        $form = UpdateForm::newFromRequest($request);
+        $form->validate();
+
+        $user = $this->userService->update($form);
+
+        Session::putRedirectData(ResponseBody::new()
+            ->setStatusCode(200)
+            ->setMessage('Successfully updated user.')
+            ->addPayload('user', $user)
+            ->toArray());
+        return $response->withHeader(
+            'Location',
+            Stringy::create('')->append('/users/', $form->getId(), '/edit')->toString()
+        );
+    }
+
+    public function destroy(Request $request, Response $response): Response
+    {
+        $id = $request->getAttribute('id');
+        $affected = $this->userService->destroy($id);
+
+        Session::putRedirectData(ResponseBody::new()
+            ->setStatusCode(200)
+            ->setMessage('Successfully deleted user.')
+            ->toArray());
+        return $response->withHeader('Location', '/users');
     }
 }

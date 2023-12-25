@@ -15,7 +15,7 @@ class User extends Model
 
     public function __construct()
     {
-        $this->columns = ['id', 'name' , 'email', 'password', 'created_at', 'updated_at'];
+        $this->columns = ['id', 'name', 'email', 'password', 'created_at', 'updated_at'];
     }
 
     /**
@@ -57,8 +57,8 @@ class User extends Model
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function getEmail(): string
     {
         return $this->email;
@@ -73,13 +73,15 @@ class User extends Model
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function getPassword(): string
     {
         return $this->password;
     }
     /**
+     * setPassword hashs the given password then set it
+     * 
      * @param string $password
      * @return void
      */
@@ -89,8 +91,8 @@ class User extends Model
     }
 
     /**
-    * @return DateTime
-    */
+     * @return DateTime
+     */
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -105,11 +107,11 @@ class User extends Model
     }
 
     /**
-    * @return ?DateTime
-    */
+     * @return ?DateTime
+     */
     public function getUpdatedAt(): ?DateTime
     {
-        return $this->updatedAt;
+        return $this->updatedAt ?? null;
     }
     /**
      * @param mixed $updatedAt
@@ -119,5 +121,4 @@ class User extends Model
     {
         $this->updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
     }
-
 }

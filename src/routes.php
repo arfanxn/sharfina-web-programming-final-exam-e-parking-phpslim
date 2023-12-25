@@ -47,8 +47,11 @@ return function (App $app) {
          */
         $app->group('/users', function (App $app) {
             $app->delete('/handle-logout', UserController::class . ':handleLogout');
-            $app->get('/', UserController::class . ':index');
+            $app->get('', UserController::class . ':index');
             $app->get('/{id}', UserController::class . ':view');
+            $app->get('/{id}/edit', UserController::class . ':edit');
+            $app->put('/{id}/handle-edit', UserController::class . ':update');
+            $app->put('/{id}/handle-delete', UserController::class . ':destroy');
         });
     })->add(AuthMiddleware::class);
 };
