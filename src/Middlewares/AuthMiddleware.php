@@ -34,7 +34,7 @@ class AuthMiddleware
             $request->withAttribute('auth', $payload);
 
             $response = $next($request, $response);
-        } catch (\Exception | \App\Exceptions\UnauthorizedException $e) {
+        } catch (\App\Exceptions\UnauthorizedException $e) {
             $data = ResponseBody::new()
                 ->setStatusCode(401)
                 ->setMessage('Unauthorized action, please login.')
