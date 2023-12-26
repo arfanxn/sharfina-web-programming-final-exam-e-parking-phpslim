@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Handlers\ResponseHandler;
 use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -13,10 +14,8 @@ use Stringy\Stringy;
 /**
  *  AuthMiddleware  
  */
-class AuthMiddleware
+class AuthMiddleware extends Middleware
 {
-    use \App\Traits\ContainerAwareTrait;
-
     public function __invoke(Request $request, Response $response, $next)
     {
         try {
@@ -34,16 +33,12 @@ class AuthMiddleware
             $request->withAttribute('auth', $payload);
 
             $response = $next($request, $response);
-        } catch (\App\Exceptions\UnauthorizedException $e) {
-            $data = ResponseBody::new()
-                ->setStatusCode(401)
-                ->setMessage('Unauthorized action, please login.')
-                ->toArray();
-            Session::putRedirectData($data);
-
-            $response = $response->withHeader('Location', '/users/login');
-        } finally {
             return $response;
+        } catch (\App\Exceptions\UnauthorizedException $e) {
+            return ResponseHandler::new($this->getContainer())
+                ->setResponse($response)
+                ->setStatusCode(401)->setMessage('Unauthorized action, please login.')
+                ->redirect('/users/login');
         }
     }
 }

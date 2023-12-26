@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Handlers\ResponseHandler;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Resources\ResponseBody;
@@ -9,7 +10,7 @@ use App\Resources\ResponseBody;
 /**
  *  ErrorMiddleware catches unhandled exceptions then returns internal server error status
  */
-class ErrorMiddleware
+class ErrorMiddleware extends Middleware
 {
     public function __invoke(Request $request, Response $response, $next)
     {
@@ -18,14 +19,11 @@ class ErrorMiddleware
             return $response;
         } catch (\Exception $e) {
             $statusCode = 500; // represents http status code
-            $response = $response->withJson(
-                ResponseBody::new()
-                    ->setStatusCode($statusCode)
-                    ->setMessage($e->getMessage())
-                    ->toArray(),
-                $statusCode
-            );
-            return $response;
+            return ResponseHandler::new($this->getContainer())
+                ->setResponse($response)
+                ->setStatusCode($statusCode)
+                ->setMessage($e->getMessage())
+                ->json();
         }
     }
 }

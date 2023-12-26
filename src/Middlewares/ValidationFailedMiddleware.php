@@ -2,12 +2,13 @@
 
 namespace App\Middlewares;
 
+use App\Handlers\ResponseHandler;
 use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Resources\ResponseBody;
 
-class ValidationFailedMiddleware
+class ValidationFailedMiddleware extends Middleware
 {
     public function __invoke(Request $request, Response $response, $next)
     {
@@ -16,16 +17,13 @@ class ValidationFailedMiddleware
             return $response;
         } catch (\App\Exceptions\ValidationFailedException $e) {
             $previousUrl = $_SERVER['HTTP_REFERER'] ?? '/';
-            Session::putRedirectData(
-                ResponseBody::new()
-                    ->setStatusCode(422)
-                    ->setMessage($e->getMessage())
-                    ->addPayload('errors', $e->getErrors()->firstOfAll())
-                    ->toArray()
-            );
 
-            $response = $response->withHeader('Location', $previousUrl);
-            return $response;
+            return ResponseHandler::new($this->getContainer())
+                ->setResponse($response)
+                ->setStatusCode(422)
+                ->setMessage($e->getMessage())
+                ->appendBody('errors', $e->getErrors()->firstOfAll())
+                ->redirect($previousUrl);
         }
     }
 }
