@@ -2,18 +2,14 @@
 
 use App\Controllers\DashboardController;
 use App\Controllers\UserController;
-use App\Middlewares\AuthMiddleware;
 use Slim\App;
-
-use Slim\Http\Request;
-use Slim\Http\Response;
 
 return function (App $app) {
     $container = $app->getContainer();
 
     // Add the before middlewares
-    $app->add(new \App\Middlewares\ValidationFailedMiddleware());
-    $app->add(new \App\Middlewares\ErrorMiddleware());
+    $app->add(\App\Middlewares\ValidationFailedMiddleware::class);
+    $app->add(\App\Middlewares\ErrorMiddleware::class);
 
     /*    
     $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
@@ -49,9 +45,11 @@ return function (App $app) {
             $app->delete('/handle-logout', UserController::class . ':handleLogout');
             $app->get('', UserController::class . ':index');
             $app->get('/{id}', UserController::class . ':view');
+            $app->get('//create', UserController::class . ':create');
+            $app->post('//handle-create', UserController::class . ':store');
             $app->get('/{id}/edit', UserController::class . ':edit');
             $app->put('/{id}/handle-edit', UserController::class . ':update');
             $app->delete('/{id}/handle-delete', UserController::class . ':destroy');
         });
-    })->add(AuthMiddleware::class);
+    })->add(\App\Middlewares\AuthMiddleware::class);
 };
