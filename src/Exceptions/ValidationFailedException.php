@@ -2,9 +2,10 @@
 
 namespace App\Exceptions;
 
+use \App\Exceptions\HttpException;
 use Rakit\Validation\ErrorBag;
 
-class ValidationFailedException extends \Exception
+class ValidationFailedException extends HttpException
 {
     private ErrorBag $errors;
 
@@ -27,6 +28,7 @@ class ValidationFailedException extends \Exception
     public static function newFromErrorBag(ErrorBag $errors): self
     {
         $e = new self($errors->firstOfAll()[key($errors->firstOfAll())]);
+        $e->setStatusCode(422); // 422 respresents unprocessable entity or invalid inputs or inputs that dont pass validation
         $e->setErrors($errors);
         return $e;
     }
@@ -48,5 +50,4 @@ class ValidationFailedException extends \Exception
         );
         return self::newFromErrorBag($errors);
     }
-
 }
