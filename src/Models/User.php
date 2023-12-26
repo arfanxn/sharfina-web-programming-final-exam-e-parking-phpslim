@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Interfaces\ArrayableInterface;
+use App\Interfaces\ResourceableInterface;
+use App\Resources\UserResource;
 use DateTime;
 
-class User extends Model
+class User extends Model implements ResourceableInterface
 {
     private string $id;
     private string $name;
@@ -15,8 +18,15 @@ class User extends Model
 
     public function __construct()
     {
-        $this->columns = ['id', 'name', 'email', 'password', 'created_at', 'updated_at'];
-        $this->hiddenColumns = ['password'];
+        $this->setColumns([
+            'id',
+            'name',
+            'email',
+            'password',
+            'created_at',
+            'updated_at',
+            'deactivated_at'
+        ]);
     }
 
     /**
@@ -121,5 +131,16 @@ class User extends Model
     public function setUpdatedAt(mixed $updatedAt): void
     {
         $this->updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+    }
+
+    /**
+     *  ----------------------------------------------------------------
+     *  Other methods
+     *  ----------------------------------------------------------------
+     */
+
+    public function toResource(): ArrayableInterface
+    {
+        return new UserResource($this);
     }
 }

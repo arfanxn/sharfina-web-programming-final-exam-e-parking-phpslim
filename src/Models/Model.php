@@ -12,10 +12,15 @@ class Model implements ArrayableInterface
      */
     protected array $columns;
 
-    /**
-     * this represents the columns that will be hidden when converted to an array
-     */
-    protected array $hiddenColumns;
+    public function getColumns(): array
+    {
+        return $this->columns ?? [];
+    }
+    protected function setColumns(array $columns): self
+    {
+        $this->columns = $columns;
+        return $this;
+    }
 
     /**
      * hydrate fills the model with the given data
@@ -44,19 +49,14 @@ class Model implements ArrayableInterface
      */
     public function toArray(): array
     {
-        $data = [];
-        foreach ($this->columns as $column) {
-            if (isset($this->hiddenColumns) && in_array($column, $this->hiddenColumns)) {
-                continue; // skip hidden columns
-            }
-
+        $arr = [];
+        foreach ($this->getColumns() as $column) {
             $camelCasedColumn = Stringy::create($column)->camelize();
             $getterMethodName = 'get' . ucfirst($camelCasedColumn);
-
             if (method_exists($this, $getterMethodName)) {
-                $data[$column] =  $this->$getterMethodName();
+                $arr[$column] =  $this->$getterMethodName();
             }
         }
-        return $data;
+        return $arr;
     }
 }

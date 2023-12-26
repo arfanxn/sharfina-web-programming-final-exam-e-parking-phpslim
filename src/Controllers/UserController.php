@@ -82,13 +82,13 @@ class UserController extends Controller
     public function view(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
-        $user = $this->userService->find($id);
+        $resource = $this->userService->find($id);
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully retrieved user.')
-            ->appendBody('user', $user->toArray())
+            ->appendBody('user', $resource->toArray())
             ->render('users/view.phtml');
     }
 
@@ -105,25 +105,25 @@ class UserController extends Controller
         $form = StoreForm::newFromRequest($request);
         $form->validate();
 
-        $user = $this->userService->store($form);
+        $resource = $this->userService->store($form);
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(201)
             ->setMessage('Successfully created user.')
-            ->appendBody('user', $user->toArray())
+            ->appendBody('user', $resource->toArray())
             ->redirect('/users');
     }
 
     public function edit(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
-        $user = $this->userService->find($id);
+        $resource = $this->userService->find($id);
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(200)
-            ->appendBody('user', $user->toArray())
+            ->appendBody('user', $resource->toArray())
             ->render('users/edit.phtml');
     }
 
@@ -132,13 +132,13 @@ class UserController extends Controller
         $form = UpdateForm::newFromRequest($request);
         $form->validate();
 
-        $user = $this->userService->update($form);
+        $resource = $this->userService->update($form);
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully updated user.')
-            ->appendBody('user', $user->toArray())
+            ->appendBody('user', $resource->toArray())
             ->redirect('/users/' . $form->getId() . '/edit');
     }
 
