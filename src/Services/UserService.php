@@ -7,9 +7,10 @@ use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Resources\Pagination;
 use DateTime;
 use Firebase\JWT\JWT;
-use Stringy\Stringy;
+use App\Resources\UserResource;
 
 class UserService extends Service
 {
@@ -67,43 +68,45 @@ class UserService extends Service
      * @param int $page
      * @param int $perPage
      * @param ?string $keyword
-     * @return array array of users
+     * @return Pagination
      * @throws \PDOException
      */
-    public function paginate(int $page, int $perPage, ?string $keyword = null): array
+    public function paginate(int $page, int $perPage, ?string $keyword = null): Pagination
     {
         $limit = $perPage;
         $offset = ($page - 1) * $perPage;
         $users = $this->userRepository->paginate($limit, $offset, $keyword);
-        return array_map(function (User $user) {
-            return $user->toArray();
+        $resources = array_map(function (User $user) {
+            return new UserResource($user);
         }, $users);
+        return Pagination::new()->fillMetadata($page, $perPage)->setData($resources);
     }
 
     /**
      * find finds by id
      *
      * @param string $id
-     * @return array $user
+     * @return UserResource
      * @throws \PDOException
+     * @throws \App\Exceptions\HttpException
      */
-    public function find(string $id): array
+    public function find(string $id): UserResource
     {
         $user = $this->userRepository->find($id);
         if (is_null($user)) {
             $this->throwDataNotFoundHttpException();
         }
-        return $user->toArray();
+        return new UserResource($user);
     }
 
     /**
      * store creates a user
      *
      * @param StoreForm $form
-     * @return array 
+     * @return UserResource
      * @throws \PDOException
      */
-    public function store(StoreForm $form): array
+    public function store(StoreForm $form): UserResource
     {
         $latestUser = $this->userRepository->findLatest();
 
@@ -117,17 +120,18 @@ class UserService extends Service
 
         $affected = $this->userRepository->create($user);
 
-        return $user->toArray();
+        return new UserResource($user);
     }
 
     /**
      * update updates by id
      *
      * @param UpdateForm $form
-     * @return array 
+     * @return UserResource 
      * @throws \PDOException
+     * @throws \App\Exceptions\HttpException
      */
-    public function update(UpdateForm $form): array
+    public function update(UpdateForm $form): UserResource
     {
         $user = $this->userRepository->find($form->getId());
         if (is_null($user)) {
@@ -143,7 +147,7 @@ class UserService extends Service
 
         $affected = $this->userRepository->update($user);
 
-        return $user->toArray();
+        return new UserResource($user);
     }
 
     /**
@@ -152,6 +156,7 @@ class UserService extends Service
      * @param string $id
      * @return int affected rows
      * @throws \PDOException
+     * @throws \App\Exceptions\HttpException
      */
     public function destroy(string $id): int
     {

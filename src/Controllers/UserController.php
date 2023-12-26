@@ -6,7 +6,6 @@ use App\Forms\User\LoginForm;
 use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
 use App\Handlers\ResponseHandler;
-use App\Resources\Pagination;
 use App\Services\UserService as UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -70,14 +69,13 @@ class UserController extends Controller
         $perPage = intval($params['per_page'] ?? 10);
         $keyword = $params['keyword'] ?? null;
 
-        $users = $this->userService->paginate($page, $perPage, $keyword);
-        $pagination = Pagination::new()->fillMetadata($page, $perPage)->setData($users)->toArray();
+        $pagination = $this->userService->paginate($page, $perPage, $keyword);
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully retrieved users.')
-            ->appendBody('pagination', $pagination)
+            ->appendBody('pagination', $pagination->toArray())
             ->render('users/index.phtml');
     }
 
@@ -90,7 +88,7 @@ class UserController extends Controller
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully retrieved user.')
-            ->appendBody('user', $user)
+            ->appendBody('user', $user->toArray())
             ->render('users/view.phtml');
     }
 
@@ -113,7 +111,7 @@ class UserController extends Controller
             ->setResponse($response)
             ->setStatusCode(201)
             ->setMessage('Successfully created user.')
-            ->appendBody('user', $user)
+            ->appendBody('user', $user->toArray())
             ->redirect('/users');
     }
 
@@ -125,7 +123,7 @@ class UserController extends Controller
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
             ->setStatusCode(200)
-            ->appendBody('user', $user)
+            ->appendBody('user', $user->toArray())
             ->render('users/edit.phtml');
     }
 
@@ -140,7 +138,7 @@ class UserController extends Controller
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully updated user.')
-            ->appendBody('user', $user)
+            ->appendBody('user', $user->toArray())
             ->redirect('/users/' . $form->getId() . '/edit');
     }
 
