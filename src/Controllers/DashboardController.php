@@ -10,7 +10,8 @@ class DashboardController extends Controller
 {
     public function __invoke(Request $request, Response $response): Response
     {
-        return ResponseHandler::new($this->getContainer(), $response)
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
             ->setStatusCode(200)
             ->render('dashboard.phtml');
     }
