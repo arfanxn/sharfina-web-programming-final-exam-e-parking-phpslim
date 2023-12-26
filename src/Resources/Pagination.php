@@ -4,7 +4,7 @@ namespace App\Resources;
 
 use Purl\Url;
 
-class Pagination
+class Pagination implements \App\Interfaces\ArrayableInterface
 {
     private int $page;
     private int $perPage;
@@ -85,8 +85,14 @@ class Pagination
             'page' => $this->page,
             'per_page' => $this->perPage,
             'last_page' => $this->lastPage ?? null,
-            'data' => $this->data,
+            'data' => array_map(function ($d) {
+                if ($d instanceof \App\Interfaces\ArrayableInterface) {
+                    return $d->toArray();
+                }
+                return $d;
+            }, $this->data)
         ];
+
         return $arr;
     }
 }
