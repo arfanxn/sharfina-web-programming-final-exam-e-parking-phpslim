@@ -3,14 +3,13 @@
 namespace App\Controllers;
 
 use App\Forms\User\LoginForm;
+use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
-use App\Helpers\Session;
+use App\Handlers\ResponseHandler;
 use App\Resources\Pagination;
-use App\Resources\ResponseBody;
 use App\Services\UserService as UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Stringy\Stringy;
 
 class UserController extends Controller
 {
@@ -23,14 +22,10 @@ class UserController extends Controller
 
     public function login(Request $request, Response $response): Response
     {
-        return $this->getContainer()->renderer->render(
-            $response,
-            'users/login.phtml',
-            ResponseBody::new()
-                ->setStatusCode(200)
-                ->mergePayload(Session::pullRedirectData())
-                ->toArray()
-        );
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(200)
+            ->render("users/login.phtml");
     }
 
     public function handleLogin(Request $request, Response $response): Response
@@ -50,21 +45,22 @@ class UserController extends Controller
             filter_var($jwtSetting['secure'], FILTER_VALIDATE_BOOLEAN),
             true,
         );
-        Session::putRedirectData(ResponseBody::new()
+
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Login successfully.')
-            ->toArray());
-        return $response->withHeader('Location', '/');
+            ->redirect('/');
     }
 
     public function handleLogout(Request $request, Response $response): Response
     {
         setcookie('Authorization', '', time() - 3600, "/"); // remove authorization cookie
-        Session::putRedirectData(ResponseBody::new()
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Logout successfully.')
-            ->toArray());
-        return $response->withHeader('Location', '/users/login');
+            ->redirect('/users/login');
     }
 
     public function index(Request $request, Response $response): Response
@@ -77,16 +73,12 @@ class UserController extends Controller
         $users = $this->userService->paginate($page, $perPage, $keyword);
         $pagination = Pagination::new()->fillMetadata($page, $perPage)->setData($users)->toArray();
 
-        return $this->getContainer()->renderer->render(
-            $response,
-            'users/index.phtml',
-            ResponseBody::new()
-                ->setStatusCode(200)
-                ->setMessage('Successfully retrieved users.')
-                ->mergePayload(Session::pullRedirectData())
-                ->addPayload('pagination', $pagination)
-                ->toArray()
-        );
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(200)
+            ->setMessage('Successfully retrieved users.')
+            ->appendBody('pagination', $pagination)
+            ->render('users/index.phtml');
     }
 
     public function view(Request $request, Response $response): Response
@@ -94,31 +86,47 @@ class UserController extends Controller
         $id = $request->getAttribute('id');
         $user = $this->userService->find($id);
 
-        return $this->getContainer()->renderer->render(
-            $response,
-            'users/view.phtml',
-            ResponseBody::new()
-                ->setStatusCode(200)
-                ->setMessage('Successfully retrieved user.')
-                ->addPayload('user', $user)
-                ->toArray()
-        );
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(200)
+            ->setMessage('Successfully retrieved user.')
+            ->appendBody('user', $user)
+            ->render('users/view.phtml');
+    }
+
+    public function create(Request $request, Response $response): Response
+    {
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(200)
+            ->render('users/create.phtml');
+    }
+
+    public function store(Request $request, Response $response): Response
+    {
+        $form = StoreForm::newFromRequest($request);
+        $form->validate();
+
+        $user = $this->userService->store($form);
+
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(201)
+            ->setMessage('Successfully created user.')
+            ->appendBody('user', $user)
+            ->redirect('/users');
     }
 
     public function edit(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
-        $user = $this->userService->find($id);;
+        $user = $this->userService->find($id);
 
-        $data = ResponseBody::new()
-            ->mergePayload(Session::pullRedirectData())
-            ->addPayload('user', $user)
-            ->toArray();
-        return $this->getContainer()->renderer->render(
-            $response,
-            'users/edit.phtml',
-            $data
-        );
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
+            ->setStatusCode(200)
+            ->appendBody('user', $user)
+            ->render('users/edit.phtml');
     }
 
     public function update(Request $request, Response $response): Response
@@ -128,15 +136,12 @@ class UserController extends Controller
 
         $user = $this->userService->update($form);
 
-        Session::putRedirectData(ResponseBody::new()
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully updated user.')
-            ->addPayload('user', $user)
-            ->toArray());
-        return $response->withHeader(
-            'Location',
-            Stringy::create('')->append('/users/', $form->getId(), '/edit')->toString()
-        );
+            ->appendBody('user', $user)
+            ->redirect('/users/' . $form->getId() . '/edit');
     }
 
     public function destroy(Request $request, Response $response): Response
@@ -144,10 +149,10 @@ class UserController extends Controller
         $id = $request->getAttribute('id');
         $affected = $this->userService->destroy($id);
 
-        Session::putRedirectData(ResponseBody::new()
+        return ResponseHandler::new($this->getContainer())
+            ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully deleted user.')
-            ->toArray());
-        return $response->withHeader('Location', '/users');
+            ->redirect('/users');
     }
 }
