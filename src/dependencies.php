@@ -3,6 +3,8 @@
 use App\Controllers\DashboardController;
 use App\Controllers\UserController;
 use App\Middlewares\AuthMiddleware;
+use App\Middlewares\ErrorMiddleware;
+use App\Middlewares\ValidationFailedMiddleware;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use Slim\App;
@@ -43,6 +45,12 @@ return function (App $app) {
      */
     $container[AuthMiddleware::class] = function ($c) {
         return (new AuthMiddleware())->setContainer($c);
+    };
+    $container[ValidationFailedMiddleware::class] = function ($c) {
+        return (new ValidationFailedMiddleware())->setContainer($c);
+    };
+    $container[ErrorMiddleware::class] = function ($c) {
+        return (new ErrorMiddleware())->setContainer($c);
     };
 
     /**
