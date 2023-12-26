@@ -10,6 +10,7 @@ use Slim\Http\Response;
 class ResponseHandler extends Handler
 {
     use \App\Traits\HttpableTrait;
+    use \App\Traits\HttpableMessageTrait;
 
     private Container $container;
     private ResponseInterface $response;

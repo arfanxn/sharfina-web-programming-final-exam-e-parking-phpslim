@@ -10,6 +10,7 @@ class HttpException extends \Exception
 
     public  function __construct()
     {
+        $this->getMessage();
     }
     public static function new(): self
     {

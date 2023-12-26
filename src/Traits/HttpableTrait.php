@@ -8,7 +8,6 @@ trait HttpableTrait
 {
     private int $statusCode; // eg: 422 or 500 or etc...
     private string $statusText; // eg: 'error' or 'success'
-    private string $message;
     private array $body;
 
     public function getStatusCode(): int
@@ -31,21 +30,6 @@ trait HttpableTrait
         $this->statusText = $statusText;
         return $this;
     }
-
-    public function getMessage(): string
-    {
-        return $this->message ?? '';
-    }
-    public function setMessage(string $message): self
-    {
-        $this->message = $message;
-        return $this;
-    }
-    public function hasMessage(): bool
-    {
-        return ($this->message ?? '') != '';
-    }
-
 
     public function getBody(): ?array
     {
