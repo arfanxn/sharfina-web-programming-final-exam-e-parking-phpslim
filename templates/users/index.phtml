@@ -24,15 +24,10 @@
         <p class="">Message: <?= $message; ?></p>
     <?php endif; ?>
 
+    <br><br>
+
     <?php if (isset($pagination)) : ?>
-        <br><br>
-        <p class="">Pagination: <?= print_r($pagination); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data']); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data'][0]); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data'][0]['name']); ?></p>
+        <p class="">Pagination: <?= dump($pagination); ?></p>
     <?php endif; ?>
 </body>
 
