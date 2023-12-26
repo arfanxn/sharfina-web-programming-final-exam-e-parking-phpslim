@@ -10,6 +10,7 @@ class StoreForm
     private string $name;
     private string $email;
     private string $password;
+    private string $confirmationPassword;
 
     public function getRules(): array
     {
@@ -17,6 +18,7 @@ class StoreForm
             'name' => 'required|min:2',
             'email' => 'required|email',
             'password' => 'required',
+            'confirmation_password' => 'required|same:password',
         ];
     }
 
@@ -47,6 +49,16 @@ class StoreForm
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getConfirmationPassword(): string
+    {
+        return $this->confirmationPassword;
+    }
+    public function setConfirmationPassword(string $confirmationPassword): self
+    {
+        $this->confirmationPassword = $confirmationPassword;
         return $this;
     }
 }
