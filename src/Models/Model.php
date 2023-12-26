@@ -45,7 +45,7 @@ class Model
     {
         $data = [];
         foreach ($this->columns as $column) {
-            if (isset($hiddenColumns) && in_array($column, $this->hiddenColumns)) {
+            if (isset($this->hiddenColumns) && in_array($column, $this->hiddenColumns)) {
                 continue; // skip hidden columns
             }
 

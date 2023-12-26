@@ -16,6 +16,7 @@ class User extends Model
     public function __construct()
     {
         $this->columns = ['id', 'name', 'email', 'password', 'created_at', 'updated_at'];
+        $this->hiddenColumns = ['password'];
     }
 
     /**
