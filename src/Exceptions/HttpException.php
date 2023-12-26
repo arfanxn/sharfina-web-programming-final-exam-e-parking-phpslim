@@ -10,7 +10,6 @@ class HttpException extends \Exception
 
     public  function __construct()
     {
-        $this->getMessage();
     }
     public static function new(): self
     {
@@ -25,6 +24,18 @@ class HttpException extends \Exception
     public function setRedirectionUrlStr(string $redirectionUrlStr): self
     {
         $this->redirectionUrlStr = $redirectionUrlStr;
+        return $this;
+    }
+
+    /**
+     * __setMessage is used to set the message variable of this class/object. Why is the method named with __ is because the method itself overrides the Exception's final getMessage method.
+     * 
+     * @param string $message
+     * @return self
+     */
+    public function __setMessage($message): self
+    {
+        $this->message = $message;
         return $this;
     }
 }

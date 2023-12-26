@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use DateTime;
 use Firebase\JWT\JWT;
+use Stringy\Stringy;
 
 class UserService extends Service
 {
@@ -90,7 +91,7 @@ class UserService extends Service
     {
         $user = $this->userRepository->find($id);
         if (is_null($user)) {
-            throw \App\Exceptions\ModelNotFoundException::new(User::class, $id);
+            $this->throwDataNotFoundHttpException();
         }
         return $user->toArray();
     }
@@ -130,7 +131,7 @@ class UserService extends Service
     {
         $user = $this->userRepository->find($form->getId());
         if (is_null($user)) {
-            throw \App\Exceptions\ModelNotFoundException::new(User::class, $form->getId());
+            $this->throwDataNotFoundHttpException();
         }
 
         $user->setName($form->getName());
@@ -156,9 +157,29 @@ class UserService extends Service
     {
         $user = $this->userRepository->find($id);
         if (is_null($user)) {
-            throw \App\Exceptions\ModelNotFoundException::new(User::class, $id);
+            $this->throwDataNotFoundHttpException();
         }
         $affected = $this->userRepository->delete($id);
         return $affected;
+    }
+
+    /**
+     * ------------------------------------------------------------------------------------------------
+     * Class utility methods
+     * ------------------------------------------------------------------------------------------------
+     */
+
+    /**
+     * throwDataNotFoundHttpException
+     *
+     * @return never
+     * @throws \App\Exceptions\HttpException
+     */
+    public function throwDataNotFoundHttpException()
+    {
+        throw \App\Exceptions\HttpException::new()
+            ->setStatusCode(404)
+            ->__setMessage('Data was not found.')
+            ->setRedirectionUrlStr('/users');;
     }
 }

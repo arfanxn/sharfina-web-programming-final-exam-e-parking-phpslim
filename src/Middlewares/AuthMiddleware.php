@@ -25,7 +25,7 @@ class AuthMiddleware extends Middleware
             if (is_null($cookieValue)) {
                 throw \App\Exceptions\HttpException::new()
                     ->setStatusCode(401)
-                    ->setMessage('Unauthorized action, please login.')
+                    ->__setMessage('Unauthorized action, please login.')
                     ->setRedirectionUrlStr('/users/login');
             }
 
@@ -38,6 +38,9 @@ class AuthMiddleware extends Middleware
             $response = $next($request, $response);
             return $response;
         } catch (\App\Exceptions\HttpException $e) {
+            if ($e->getStatusCode() != 401) {
+                throw $e; // rethrow exception if code is not 401 (Unauthorized)
+            }
             return ResponseHandler::new($this->getContainer())
                 ->setResponse($response)
                 ->setStatusCode($e->getStatusCode())->setMessage($e->getMessage())

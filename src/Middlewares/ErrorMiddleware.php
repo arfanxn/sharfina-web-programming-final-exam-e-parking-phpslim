@@ -21,7 +21,7 @@ class ErrorMiddleware extends Middleware
                 ->setResponse($response)
                 ->setStatusCode($e->getStatusCode() ?? 500);
 
-            if ($e->hasMessage()) {
+            if ($e->getMessage() != '') {
                 $rh->setMessage($e->getMessage());
             }
 
