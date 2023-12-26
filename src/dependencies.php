@@ -4,6 +4,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\UserController;
 use App\Middlewares\AuthMiddleware;
 use App\Middlewares\ErrorMiddleware;
+use App\Middlewares\GuestMiddleware;
 use App\Middlewares\ValidationFailedMiddleware;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
@@ -43,6 +44,9 @@ return function (App $app) {
     /**
      *  Container of middlewares
      */
+    $container[GuestMiddleware::class] = function ($c) {
+        return (new GuestMiddleware())->setContainer($c);
+    };
     $container[AuthMiddleware::class] = function ($c) {
         return (new AuthMiddleware())->setContainer($c);
     };

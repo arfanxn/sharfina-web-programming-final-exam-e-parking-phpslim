@@ -8,8 +8,8 @@ return function (App $app) {
     $container = $app->getContainer();
 
     // Add the before middlewares
-    $app->add(\App\Middlewares\ValidationFailedMiddleware::class);
     $app->add(\App\Middlewares\ErrorMiddleware::class);
+    $app->add(\App\Middlewares\ValidationFailedMiddleware::class);
 
     /*    
     $app->get('/[{name}]', function (Request $request, Response $response, array $args) use ($container) {
@@ -22,17 +22,17 @@ return function (App $app) {
 
 
     /**
-     *  Routes that are excluded from the Authentication process
+     *  Routes that are EXCLUDED from the Authentication process
      */
     $app->group('', function (App $app) {
         $app->group('/users', function (App $app) {
             $app->get('/login', UserController::class . ':login');
             $app->post('/handle-login', UserController::class . ':handleLogin');
         });
-    });
+    })->add(\App\Middlewares\GuestMiddleware::class);
 
     /**
-     *  Routes that are included in the Authentication process
+     *  Routes that are INCLUDED in the Authentication process
      */
     $app->group('', function (App $app) use ($container) {
 

@@ -3,10 +3,8 @@
 namespace App\Middlewares;
 
 use App\Handlers\ResponseHandler;
-use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Resources\ResponseBody;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Stringy\Stringy;
@@ -37,10 +35,20 @@ class AuthMiddleware extends Middleware
 
             $response = $next($request, $response);
             return $response;
+        } catch (
+            \InvalidArgumentException |
+            \DomainException |
+            \UnexpectedValueException |
+            \Firebase\JWT\SignatureInvalidException |
+            \Firebase\JWT\BeforeValidException |
+            \Firebase\JWT\ExpiredException $e
+        ) {
+            // TODO: handle this exception
         } catch (\App\Exceptions\HttpException $e) {
             if ($e->getStatusCode() != 401) {
                 throw $e; // rethrow exception if code is not 401 (Unauthorized)
             }
+            // Redirect to the login page if user is NOT logged in
             return ResponseHandler::new($this->getContainer())
                 ->setResponse($response)
                 ->setStatusCode($e->getStatusCode())->setMessage($e->getMessage())
