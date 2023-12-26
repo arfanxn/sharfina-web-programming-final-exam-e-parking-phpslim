@@ -79,6 +79,48 @@ class UserRepository extends Repository
     }
 
     /**
+     * findLatest get the latest inserted row 
+     *
+     * @return ?User
+     * @throws \PDOException
+     */
+    public function findLatest(): ?User
+    {
+        $stmt = $this->connection->prepare('SELECT * FROM users ORDER BY created_at DESC LIMIT 1');
+        $stmt->execute();
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+        return is_null($row) ? null : (new User())->hydrate($row);
+    }
+
+    /**
+     * create creates a user by id
+     *
+     * @param User $user
+     * @return int rows affected
+     * @throws \PDOException
+     */
+    public function create(User $user): int
+    {
+        $stmt = $this->connection->prepare(
+            'INSERT INTO users (id, name, email, password, created_at, updated_at) VALUES (:id, :name, :email, :password, :created_at, :updated_at);'
+        );
+        $id = $user->getId();
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $createdAtStr = $user->getCreatedAt()->format('Y-m-d H:i:s');
+        $updatedAtStr = $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null;
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
+        $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
+        $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
+        $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
      * update updates a user by id
      *
      * @param User $user
@@ -100,12 +142,9 @@ class UserRepository extends Repository
         $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
         $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
-        if (is_null($updatedAtStr) == false) {
-            $stmt->bindParam(':updated_at', $updatedAtStr, \PDO::PARAM_STR);
-        } else {
-            $stmt->bindParam(':updated_at', null, \PDO::PARAM_NULL);
-        }
+        $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->rowCount();
     }
 
@@ -118,9 +157,11 @@ class UserRepository extends Repository
      */
     public function delete(string $id): int
     {
+        $this->connection->exec('SET foreign_key_checks = 0'); // disable foreign key checks during deletion
         $stmt = $this->connection->prepare('DELETE FROM users WHERE id = :id');
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->execute();
+        $this->connection->exec('SET foreign_key_checks = 1'); // enabke foreign key checks after deletion
         return $stmt->rowCount();
     }
 }

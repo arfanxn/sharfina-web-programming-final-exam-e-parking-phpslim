@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Forms\User\LoginForm;
+use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -91,6 +92,30 @@ class UserService extends Service
         if (is_null($user)) {
             throw \App\Exceptions\ModelNotFoundException::new(User::class, $id);
         }
+        return $user->toArray();
+    }
+
+    /**
+     * store creates a user
+     *
+     * @param StoreForm $form
+     * @return array 
+     * @throws \PDOException
+     */
+    public function store(StoreForm $form): array
+    {
+        $latestUser = $this->userRepository->findLatest();
+
+        $user = new User();
+        $user->setId(($latestUser->getId() ?? 0) + 1);
+        $user->setName($form->getName());
+        $user->setEmail($form->getEmail());
+        $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
+        $user->setCreatedAt(new DateTime());
+        $user->setUpdatedAt(null);
+
+        $affected = $this->userRepository->create($user);
+
         return $user->toArray();
     }
 
