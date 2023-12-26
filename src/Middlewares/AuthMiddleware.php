@@ -23,7 +23,10 @@ class AuthMiddleware extends Middleware
 
             $cookieValue = $_COOKIE['Authorization'] ?? null;
             if (is_null($cookieValue)) {
-                throw new \App\Exceptions\UnauthorizedException();
+                throw \App\Exceptions\HttpException::new()
+                    ->setStatusCode(401)
+                    ->setMessage('Unauthorized action, please login.')
+                    ->setRedirectionUrlStr('/users/login');
             }
 
             $token = (new Stringy($cookieValue))->after('Bearer ')->toString();
@@ -34,11 +37,11 @@ class AuthMiddleware extends Middleware
 
             $response = $next($request, $response);
             return $response;
-        } catch (\App\Exceptions\UnauthorizedException $e) {
+        } catch (\App\Exceptions\HttpException $e) {
             return ResponseHandler::new($this->getContainer())
                 ->setResponse($response)
-                ->setStatusCode(401)->setMessage('Unauthorized action, please login.')
-                ->redirect('/users/login');
+                ->setStatusCode($e->getStatusCode())->setMessage($e->getMessage())
+                ->redirect($e->getRedirectionUrlStr());
         }
     }
 }

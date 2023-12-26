@@ -3,10 +3,8 @@
 namespace App\Middlewares;
 
 use App\Handlers\ResponseHandler;
-use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Resources\ResponseBody;
 
 class ValidationFailedMiddleware extends Middleware
 {
@@ -20,7 +18,7 @@ class ValidationFailedMiddleware extends Middleware
 
             return ResponseHandler::new($this->getContainer())
                 ->setResponse($response)
-                ->setStatusCode(422)
+                ->setStatusCode($e->getStatusCode() ?? 422)
                 ->setMessage($e->getMessage())
                 ->appendBody('errors', $e->getErrors()->firstOfAll())
                 ->redirect($previousUrl);
