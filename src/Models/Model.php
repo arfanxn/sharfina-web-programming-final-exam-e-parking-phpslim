@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Interfaces\ArrayableInterface;
 use Stringy\Stringy;
 
-class Model
+class Model implements ArrayableInterface
 {
     /**
      * this represents the table columns
