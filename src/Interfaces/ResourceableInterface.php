@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface ResourceableInterface
 {
-    public function toArray(): ArrayableInterface;
+    public function toResource(): ArrayableInterface;
 }
