@@ -38,15 +38,11 @@ trait FormTrait
      */
     public function hydrate(array $data): self
     {
-        foreach ($data as $key => $value) {
+        foreach ($this->getRules() as $key => $_) {
             $camelCasedKey = Stringy::create($key)->camelize();
             $setterMethodName = 'set' . ucfirst($camelCasedKey);
-            if (method_exists($this, $setterMethodName)) {
-                $value = $data[$key];
-                $this->$setterMethodName($value);
-            } else {
-                unset($data[$key]);
-            }
+            $value = $data[$key];
+            $this->$setterMethodName($value);
         }
         $this->setData($data); // sets the data
         return $this;
