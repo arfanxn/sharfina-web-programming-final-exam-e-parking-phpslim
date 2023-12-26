@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fanparking | Users Index</title>
+    <title>Fanparking | User Create</title>
     <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <style>
         /* Your custom styles here */
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <h1 class="text-8xl">Users Index</h1>
+    <h1 class="text-8xl">Users Create / Add</h1>
     <?php if (isset($status_code)) : ?>
         <p class="">Status code: <?= $status_code; ?></p>
     <?php endif; ?>
@@ -22,17 +22,6 @@
     <?php endif; ?>
     <?php if (isset($message)) : ?>
         <p class="">Message: <?= $message; ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($pagination)) : ?>
-        <br><br>
-        <p class="">Pagination: <?= print_r($pagination); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data']); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data'][0]); ?></p>
-        <br>
-        <p class="">Pagination: <?= print_r($pagination['data'][0]['name']); ?></p>
     <?php endif; ?>
 </body>
 
