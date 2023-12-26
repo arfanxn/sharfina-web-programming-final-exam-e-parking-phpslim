@@ -29,6 +29,7 @@ class ValidationFailedException extends HttpException
     {
         $e = new self($errors->firstOfAll()[key($errors->firstOfAll())]);
         $e->setStatusCode(422); // 422 respresents unprocessable entity or invalid inputs or inputs that dont pass validation
+        $e->message = $errors->firstOfAll()[key($errors->firstOfAll())];
         $e->setErrors($errors);
         return $e;
     }
