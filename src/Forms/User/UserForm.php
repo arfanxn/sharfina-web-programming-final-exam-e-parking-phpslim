@@ -8,7 +8,7 @@ class UserForm
     private string $name;
     private string $email;
     private string $password;
-    private ?\DateTime $deactivedAt;
+    private ?\DateTime $deactivatedAt;
 
     public function getId(): int
     {
@@ -50,18 +50,18 @@ class UserForm
         return $this;
     }
 
-    public function getDeactivedAt(): ?\DateTime
+    public function getDeactivatedAt(): ?\DateTime
     {
-        return $this->deactivedAt ?? null;
+        return $this->deactivatedAt ?? null;
     }
-    public function setDeactivedAt(mixed $deactivedAt): self
+    public function setDeactivatedAt(mixed $deactivatedAt): self
     {
-        if ($deactivedAt instanceof string) {
-            $this->deactivedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $deactivedAt);
-        } else if ($deactivedAt instanceof \DateTime) {
-            $this->deactivedAt = $deactivedAt;
+        if ($deactivatedAt instanceof string) {
+            $this->deactivatedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $deactivatedAt);
+        } else if ($deactivatedAt instanceof \DateTime) {
+            $this->deactivatedAt = $deactivatedAt;
         } else {
-            $this->deactivedAt = null;
+            $this->deactivatedAt = null;
         }
         return $this;
     }
