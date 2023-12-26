@@ -41,6 +41,10 @@ trait HttpableTrait
         $this->message = $message;
         return $this;
     }
+    public function hasMessage(): bool
+    {
+        return ($this->message ?? '') != '';
+    }
 
 
     public function getBody(): ?array
@@ -54,7 +58,7 @@ trait HttpableTrait
             'status_text' => $this->getStatusText(),
         ];
 
-        if ($this->getMessage() != '') {
+        if ($this->hasMessage()) {
             $body = array_merge($body, ['message' => $this->getMessage()]);
         }
         if (isset($this->body) && !empty($this->body)) {
