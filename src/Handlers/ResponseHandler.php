@@ -5,12 +5,13 @@ namespace App\Handlers;
 use App\Helpers\Arr;
 use App\Helpers\Session;
 use Slim\Container;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
+use Slim\Http\Response;
 
 class ResponseHandler extends Handler
 {
     private Container $container;
-    private Response $response;
+    private ResponseInterface $response;
     private int $statusCode; // eg: 422 or 500 or etc...
     private string $statusText; // eg: 'error' or 'success'
     private ?string $message;
@@ -35,7 +36,7 @@ class ResponseHandler extends Handler
         return $this;
     }
 
-    public function getResponse(): Response
+    public function getResponse(): ResponseInterface
     {
         if (isset($this->response)) {
             return $this->response;
@@ -44,7 +45,7 @@ class ResponseHandler extends Handler
         $this->response = (new Response())->withStatus($this->getStatusCode());
         return $this->response;
     }
-    public function setResponse(Response $response): self
+    public function setResponse(ResponseInterface $response): self
     {
         $this->response = $response;
         return $this;
@@ -124,9 +125,9 @@ class ResponseHandler extends Handler
      * render returns the response as response with rendered view template
      * 
      * @param string $urlStr
-     * @return Response
+     * @return ResponseInterface
      */
-    public function render(string $template): Response
+    public function render(string $template): ResponseInterface
     {
         $this->mergeBody(Session::pullRedirectData());
         $renderer = $this->getContainer()->renderer;
@@ -136,9 +137,9 @@ class ResponseHandler extends Handler
     /**
      * json returns the response as json
      * 
-     * @return Response
+     * @return ResponseInterface
      */
-    public function json(): Response
+    public function json(): ResponseInterface
     {
         $this->mergeBody(Session::pullRedirectData());
         return $this->getResponse()->getBody()->withJson($this->getBody());
@@ -148,9 +149,9 @@ class ResponseHandler extends Handler
      * redirect returns the response as redirection response
      * 
      * @param string $urlStr
-     * @return Response
+     * @return ResponseInterface
      */
-    public function redirect(string $urlStr): Response
+    public function redirect(string $urlStr): ResponseInterface
     {
         Session::putRedirectData($this->getBody());
         return $this->getResponse()->withHeader('Location', $urlStr);
