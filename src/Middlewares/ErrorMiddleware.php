@@ -15,6 +15,7 @@ class ErrorMiddleware
     {
         try {
             $response = $next($request, $response);
+            return $response;
         } catch (\Exception $e) {
             $statusCode = 500; // represents http status code
             $response = $response->withJson(
@@ -24,8 +25,7 @@ class ErrorMiddleware
                     ->toArray(),
                 $statusCode
             );
+            return $response;
         }
-
-        return $response;
     }
 }
