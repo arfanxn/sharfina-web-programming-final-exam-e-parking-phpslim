@@ -1,33 +1,92 @@
-# Slim Framework 3 Skeleton Application
+# Fanparking (PHP Slim & JavaScript)
 
-Use this skeleton application to quickly setup and start working on a new Slim Framework 3 application. This application uses the latest Slim 3 with the PHP-View template renderer. It also uses the Monolog logger.
+Fanparking is an E-Parking application built with PHP, PHP Slim 3, Javascript, and Tailwind CSS.
 
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
+## Directory structure
 
-## Install the Application
+```
+.
+├── logs // logging
+├── public // publicly accessible files
+│   └── assets
+│       ├── css // CSS files
+│       ├── images // Images
+│       └── js // JavaScript files
+├── src // the root of the source project
+│   ├── Controllers // Controllers: classes that handle requests and responses
+│   ├── Exceptions // Exceptions: classes that handle errors
+│   ├── Forms // Forms: classes that validate and handle conversion from json to php object
+│   │   └── User
+│   ├── Handlers // Handlers
+│   ├── Helpers // Helpers: classes that store generally used functions
+│   ├── Interfaces // Interfaces
+│   ├── Middlewares // Middlewares: classes that being the middlemen of the requests
+│   ├── Models // Models: classes that used for row modeling from database
+│   ├── Repositories // Repositories: classes that communicate with the database, it's like DAO (Data access object)
+│   ├── Resources // Resources: classes that used for response modeling from the model class
+│   ├── Services // Services: classes that communicate controllers with repositories
+│   └── Traits // Traits
+├── templates // templates contains views like phtml and so on
+│   └── users
+└── tests // testing
+    └── Functional
 
-Run this command from the directory in which you want to install your new Slim Framework application.
+```
 
-    php composer.phar create-project slim/slim-skeleton [my-app-name]
+## Installation
 
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
+Install all composer dependencies
 
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writeable.
+```sh
+composer install --ignore-platform-reqs
+// or
+composer install
+```
 
-To run the application in development, you can run these commands 
+Create environtment file from example.env file
 
-	cd [my-app-name]
-	php composer.phar start
-	
-Or you can use `docker-compose` to run the app with `docker`, so you can run these commands:
+```sh
+cp example.env .env
+```
 
-         cd [my-app-name]
-	 docker-compose up -d
-After that, open `http://0.0.0.0:8080` in your browser.
+Migrate database;
+You have to migrate the database manually; the sql migration file is located at ./migration.sql and if necessary, you can seed the database with the sql seeder file that is located at ./seeder.sql
 
-Run this command in the application directory to run the test suite
+```sh
+cat ./migration.sql //  migration file
+cat ./seeder.sql // seeder file
+```
 
-	php composer.phar test
+## Configuration
 
-That's it! Now go build something cool.
+Configure the app settings
+
+```sh
+code ./src/settings.php
+or
+vim ./src/settings.php
+```
+
+Configure the app dependencies
+
+```sh
+code ./src/dependencies.php
+or
+vim ./src/dependencies.php
+```
+
+Configure the app environment
+
+```sh
+code .env
+or
+vim .env
+```
+
+## Running
+
+Start and run the server with this following command
+
+```
+ php -S localhost:8000 -t public
+```
