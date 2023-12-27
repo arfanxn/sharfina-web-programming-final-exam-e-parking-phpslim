@@ -25,7 +25,13 @@ class ErrorMiddleware extends Middleware
                 $rh->setMessage($e->getMessage());
             }
 
-            return $rh->redirect($e->getRedirectionUrlStr());
+            if ($e->hasRedirectionUrlStr()) {
+                return $rh->redirect($e->getRedirectionUrlStr());
+            } else {
+                return $rh->json();
+            }
+        } catch (\Exception $e) {
+            dd($e);
         }
     }
 }
