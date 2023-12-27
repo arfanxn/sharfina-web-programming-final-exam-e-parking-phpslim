@@ -6,7 +6,7 @@ class HttpException extends \Exception
 {
     use \App\Traits\HttpableTrait;
 
-    private string $redirectionUrlStr;
+    private ?string $redirectionUrlStr;
 
     public  function __construct()
     {
@@ -16,12 +16,12 @@ class HttpException extends \Exception
         return new self();
     }
 
-    public function getRedirectionUrlStr(): string
+    public function getRedirectionUrlStr(): ?string
     {
-        $this->redirectionUrlStr = $this->redirectionUrlStr ?? $_SERVER['HTTP_REFERER'];
+        $this->redirectionUrlStr = $this->redirectionUrlStr ?? $_SERVER['HTTP_REFERER'] ?? null;
         return  $this->redirectionUrlStr;
     }
-    public function setRedirectionUrlStr(string $redirectionUrlStr): self
+    public function setRedirectionUrlStr(?string $redirectionUrlStr): self
     {
         $this->redirectionUrlStr = $redirectionUrlStr;
         return $this;
