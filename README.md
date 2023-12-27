@@ -26,7 +26,7 @@ Fanparking is an E-Parking application built with PHP, PHP Slim 3, Javascript, a
 │   ├── Resources // Resources: classes that used for response modeling from the model class
 │   ├── Services // Services: classes that communicate controllers with repositories
 │   └── Traits // Traits
-├── templates // templates contains views like phtml and so on
+├── templates // templates: it contains views like html or phtml and so on
 │   └── users
 └── tests // testing
     └── Functional
