@@ -21,6 +21,11 @@ class HttpException extends \Exception
         $this->redirectionUrlStr = $this->redirectionUrlStr ?? $_SERVER['HTTP_REFERER'] ?? null;
         return  $this->redirectionUrlStr;
     }
+    public function hasRedirectionUrlStr(): bool
+    {
+        $redirectionUrlStr = $this->getRedirectionUrlStr();
+        return !is_null($redirectionUrlStr) && ($redirectionUrlStr !== '');
+    }
     public function setRedirectionUrlStr(?string $redirectionUrlStr): self
     {
         $this->redirectionUrlStr = $redirectionUrlStr;
