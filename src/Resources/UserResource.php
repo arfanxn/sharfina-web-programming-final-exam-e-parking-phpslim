@@ -23,6 +23,7 @@ class UserResource implements ArrayableInterface
             'email' => $model->getEmail(),
             'created_at' => $model->getCreatedAt()->format('Y-m-d H:i:s'),
             'updated_at' => $model->getUpdatedAt() ? $model->getUpdatedAt()->format('Y-m-d H:i:s') : null,
+            'deactived_at' => $model->getUpdatedAt() ? $model->getUpdatedAt()->format('Y-m-d H:i:s') : null,
         ];
     }
 }

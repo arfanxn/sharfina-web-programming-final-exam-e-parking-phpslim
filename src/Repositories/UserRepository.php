@@ -45,11 +45,11 @@ class UserRepository extends Repository
     /**
      * find finds a user by id
      *
-     * @param string $id
+     * @param int $id
      * @return ?User
      * @throws \PDOException
      */
-    public function find(string $id): ?User
+    public function find(int $id): ?User
     {
         $stmt = $this->connection->prepare('SELECT * FROM users WHERE id = :id');
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
@@ -102,20 +102,9 @@ class UserRepository extends Repository
     public function create(User $user): int
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO users (id, name, email, password, created_at, updated_at) VALUES (:id, :name, :email, :password, :created_at, :updated_at);'
+            'INSERT INTO users (id, name, email, password, created_at, updated_at, deactivated_at) VALUES (:id, :name, :email, :password, :created_at, :updated_at, :deactivated_at);'
         );
-        $id = $user->getId();
-        $name = $user->getName();
-        $email = $user->getEmail();
-        $password = $user->getPassword();
-        $createdAtStr = $user->getCreatedAt()->format('Y-m-d H:i:s');
-        $updatedAtStr = $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null;
-        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-        $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
-        $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
-        $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
+        $this->bindStatement($stmt, $user);
         $stmt->execute();
         return $stmt->rowCount();
     }
@@ -130,20 +119,9 @@ class UserRepository extends Repository
     public function update(User $user): int
     {
         $stmt = $this->connection->prepare(
-            'UPDATE users SET name = :name, email = :email, password = :password, created_at = :created_at, updated_at = :updated_at WHERE id = :id'
+            'UPDATE users SET name = :name, email = :email, password = :password, created_at = :created_at, updated_at = :updated_at, deactivated_at = :deactivated_at WHERE id = :id'
         );
-        $id = $user->getId();
-        $name = $user->getName();
-        $email = $user->getEmail();
-        $password = $user->getPassword();
-        $createdAtStr = $user->getCreatedAt()->format('Y-m-d H:i:s');
-        $updatedAtStr = $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null;
-        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-        $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
-        $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
-        $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
-        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $this->bindStatement($stmt, $user);
         $stmt->execute();
         return $stmt->rowCount();
     }
@@ -151,11 +129,11 @@ class UserRepository extends Repository
     /**
      * delete deletes a user by id
      *
-     * @param string $id
+     * @param int $id
      * @return int rows affected
      * @throws \PDOException
      */
-    public function delete(string $id): int
+    public function delete(int $id): int
     {
         $this->connection->exec('SET foreign_key_checks = 0'); // disable foreign key checks during deletion
         $stmt = $this->connection->prepare('DELETE FROM users WHERE id = :id');
@@ -163,5 +141,37 @@ class UserRepository extends Repository
         $stmt->execute();
         $this->connection->exec('SET foreign_key_checks = 1'); // enabke foreign key checks after deletion
         return $stmt->rowCount();
+    }
+
+    /**
+     *  ----------------------------------------------------------------
+     *  Utility methods
+     *  ----------------------------------------------------------------
+     */
+
+    /**
+     * bindStatement binds parameters into the given statement 
+     * 
+     * @param \PDOStatement  $stmt the prepared statement to be bind
+     * @param User $user
+     * @return \PDOStatement
+     */
+    private function bindStatement(\PDOStatement $stmt, User $user): \PDOStatement
+    {
+        $id = $user->getId();
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+        $createdAtStr = $user->getCreatedAt()->format('Y-m-d H:i:s');
+        $updatedAtStr = $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null;
+        $deactivatedAtStr = $user->getDeactivatedAt() ? $user->getDeactivatedAt()->format('Y-m-d H:i:s') : null;
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
+        $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
+        $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
+        $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
+        $stmt->bindParam(':deactivated_at', $deactivatedAtStr, is_null($deactivatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
+        return $stmt;
     }
 }

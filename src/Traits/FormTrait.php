@@ -26,7 +26,7 @@ trait FormTrait
             $request->getQueryParams(),
         );
         $form = new self();
-        $form->hydrate($data);
+        $form->setData($data);
         return $form;
     }
 
@@ -89,6 +89,8 @@ trait FormTrait
         if ($validation->fails() && !$silent) {
             throw \App\Exceptions\ValidationFailedException::newFromErrorBag($validation->errors());
         }
+
+        $this->hydrate($this->getData());
 
         return $validation;
     }

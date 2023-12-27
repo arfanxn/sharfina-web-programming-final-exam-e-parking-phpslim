@@ -14,18 +14,7 @@ class StoreForm extends UserForm
             'name' => 'required|min:2',
             'email' => 'required|email',
             'password' => 'required',
-            'confirmation_password' => 'required|same:password',
-            'deactivated_at' => 'required|date',
+            'deactivated_at' => 'nullable|date:Y-m-d H:i:s',
         ];
-    }
-
-    public function getConfirmationPassword(): string
-    {
-        return $this->confirmationPassword;
-    }
-    public function setConfirmationPassword(string $confirmationPassword): self
-    {
-        $this->confirmationPassword = $confirmationPassword;
-        return $this;
     }
 }

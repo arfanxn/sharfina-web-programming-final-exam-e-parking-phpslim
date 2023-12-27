@@ -117,6 +117,7 @@ class UserService extends Service
         $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
         $user->setCreatedAt(new DateTime());
         $user->setUpdatedAt(null);
+        $user->setDeactivatedAt($form->getDeactivatedAt());
 
         $affected = $this->userRepository->create($user);
 
@@ -144,6 +145,7 @@ class UserService extends Service
             $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
         }
         $user->setUpdatedAt(new DateTime());
+        $user->setDeactivatedAt($form->getDeactivatedAt());
 
         $affected = $this->userRepository->update($user);
 
