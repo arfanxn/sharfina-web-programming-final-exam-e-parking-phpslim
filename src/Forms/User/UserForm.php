@@ -56,7 +56,7 @@ class UserForm
     }
     public function setDeactivatedAt(mixed $deactivatedAt): self
     {
-        if ($deactivatedAt instanceof string) {
+        if (is_string($deactivatedAt)) {
             $this->deactivatedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $deactivatedAt);
         } else if ($deactivatedAt instanceof \DateTime) {
             $this->deactivatedAt = $deactivatedAt;
