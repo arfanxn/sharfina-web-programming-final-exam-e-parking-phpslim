@@ -1,4 +1,4 @@
-# Fanparking (PHP Slim & JavaScript)
+# Fanparking (PHP Slim)
 
 Fanparking is an E-Parking application built with PHP, PHP Slim 3, Javascript, and Tailwind CSS.
 
