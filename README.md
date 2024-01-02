@@ -43,6 +43,14 @@ composer install --ignore-platform-reqs
 composer install
 ```
 
+Install all npm/yarn dependencies
+
+```sh
+npm install
+// or
+yarn install
+```
+
 Create environtment file from example.env file
 
 ```sh
@@ -63,7 +71,7 @@ Configure the app settings
 
 ```sh
 code ./src/settings.php
-or
+// or
 vim ./src/settings.php
 ```
 
@@ -71,7 +79,7 @@ Configure the app dependencies
 
 ```sh
 code ./src/dependencies.php
-or
+// or
 vim ./src/dependencies.php
 ```
 
@@ -79,7 +87,7 @@ Configure the app environment
 
 ```sh
 code .env
-or
+// or
 vim .env
 ```
 
