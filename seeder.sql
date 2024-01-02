@@ -9,7 +9,7 @@ INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_
 INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES ('6','Retza Pahlevi','retza@gmail.com', '$2y$10$iJAKJQG8e6X3h3L81Dzq3.oDtAv7S0pm2ql6vGYr3WNLAnIJuXs3q', '2023-12-07 00:00:00', '2023-12-07 00:00:00', NULL);
 INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES ('7','Raisul Amin','raisul@gmail.com', '$2y$10$iJAKJQG8e6X3h3L81Dzq3.oDtAv7S0pm2ql6vGYr3WNLAnIJuXs3q', '2023-12-07 00:00:00', NULL, NULL);
 INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES ('8','Farras Abdullah','farras@gmail.com', '$2y$10$iJAKJQG8e6X3h3L81Dzq3.oDtAv7S0pm2ql6vGYr3WNLAnIJuXs3q', '2023-12-07 00:00:00', '2023-12-07 00:00:00', NULL);
-INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES ('8','Muhammad Arfan','arfan@gmail.com', '$2y$10$iJAKJQG8e6X3h3L81Dzq3.oDtAv7S0pm2ql6vGYr3WNLAnIJuXs3q', '2023-12-07 00:00:00', NULL, NULL);
+INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES ('9','Muhammad Arfan','arfan@gmail.com', '$2y$10$iJAKJQG8e6X3h3L81Dzq3.oDtAv7S0pm2ql6vGYr3WNLAnIJuXs3q', '2023-12-07 00:00:00', NULL, NULL);
 
 ----------------------------------------------------------------
 -- vehicle colors
