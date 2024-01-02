@@ -1,4 +1,4 @@
-USE `e-parking-1`
+USE `fanparking`
 
 SET foreign_key_checks = 0;
 DROP TABLE IF EXISTS parked_vehicles;
