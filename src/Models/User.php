@@ -15,7 +15,7 @@ class User extends Model implements ResourceableInterface
     private string $password;
     private DateTime $createdAt;
     private ?DateTime $updatedAt;
-    private ?DateTime $deactivatedAt;
+    private ?DateTime $deactivedAt;
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class User extends Model implements ResourceableInterface
             'password',
             'created_at',
             'updated_at',
-            'deactivated_at'
+            'deactived_at'
         ]);
     }
 
@@ -137,17 +137,17 @@ class User extends Model implements ResourceableInterface
     /**
      * @return ?DateTime
      */
-    public function getDeactivatedAt(): ?DateTime
+    public function getDeactivedAt(): ?DateTime
     {
-        return $this->deactivatedAt ?? null;
+        return $this->deactivedAt ?? null;
     }
     /**
-     * @param mixed $deactivatedAt
+     * @param mixed $deactivedAt
      * @return void
      */
-    public function setDeactivatedAt(mixed $deactivatedAt): void
+    public function setDeactivedAt(mixed $deactivedAt): void
     {
-        $this->deactivatedAt = is_string($deactivatedAt) ? new DateTime($deactivatedAt) : $deactivatedAt;
+        $this->deactivedAt = is_string($deactivedAt) ? new DateTime($deactivedAt) : $deactivedAt;
     }
 
     /**
