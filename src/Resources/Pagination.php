@@ -8,6 +8,7 @@ class Pagination implements \App\Interfaces\ArrayableInterface
 {
     private int $page;
     private int $perPage;
+    private ?string $keyword;
     private ?int $lastPage;
     private ?string $prevUrlStr;
     private string $currentUrlStr;
@@ -33,10 +34,11 @@ class Pagination implements \App\Interfaces\ArrayableInterface
      * @param ?string $urlStr
      * @return self
      */
-    public function fillMetadata(int $page, int $perPage = 10, ?int $lastPage = null, ?string $urlStr = null): self
+    public function fillMetadata(int $page, int $perPage = 10, $keyword = null, ?int $lastPage = null, ?string $urlStr = null): self
     {
         $this->page = $page;
         $this->perPage = $perPage;
+        $this->keyword = $keyword;
         $this->lastPage = $lastPage;
 
         if (is_null($urlStr)) { // if null, use the current url string
@@ -85,6 +87,7 @@ class Pagination implements \App\Interfaces\ArrayableInterface
             'page' => $this->page,
             'per_page' => $this->perPage,
             'last_page' => $this->lastPage ?? null,
+            'keyword' => $this->keyword,
             'data' => array_map(function ($d) {
                 if ($d instanceof \App\Interfaces\ArrayableInterface) {
                     return $d->toArray();
