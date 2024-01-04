@@ -79,7 +79,7 @@ class UserService extends Service
         $resources = array_map(function (User $user) {
             return new UserResource($user);
         }, $users);
-        return Pagination::new()->fillMetadata($page, $perPage)->setData($resources);
+        return Pagination::new()->fillMetadata($page, $perPage, $keyword)->setData($resources);
     }
 
     /**
@@ -117,7 +117,7 @@ class UserService extends Service
         $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
         $user->setCreatedAt(new DateTime());
         $user->setUpdatedAt(null);
-        $user->setDeactivatedAt($form->getDeactivatedAt());
+        $user->setDeactivedAt($form->getDeactivedAt());
 
         $affected = $this->userRepository->create($user);
 
@@ -145,7 +145,7 @@ class UserService extends Service
             $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
         }
         $user->setUpdatedAt(new DateTime());
-        $user->setDeactivatedAt($form->getDeactivatedAt());
+        $user->setDeactivedAt($form->getDeactivedAt());
 
         $affected = $this->userRepository->update($user);
 
