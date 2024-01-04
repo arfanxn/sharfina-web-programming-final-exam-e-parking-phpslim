@@ -34,6 +34,13 @@ class ResponseHandler extends Handler
         return $this;
     }
 
+    public function withAuth()
+    {
+        if ($auth = $_SESSION['auth'] ?? null) {
+            $this->appendBody('auth', json_decode(json_encode($auth), true));
+        }
+    }
+
     public function getResponse(): ResponseInterface
     {
         if (isset($this->response)) {
@@ -57,6 +64,7 @@ class ResponseHandler extends Handler
      */
     public function render(string $template): ResponseInterface
     {
+        $this->withAuth();
         $this->mergeBody(Session::pullRedirectData());
         $renderer = $this->getContainer()->renderer;
         return $renderer->render($this->getResponse(), $template, $this->getBody());
@@ -69,6 +77,7 @@ class ResponseHandler extends Handler
      */
     public function json(): ResponseInterface
     {
+        $this->withAuth();
         $this->mergeBody(Session::pullRedirectData());
         return $this->getResponse()->withJson($this->getBody());
     }
@@ -81,6 +90,7 @@ class ResponseHandler extends Handler
      */
     public function redirect(string $urlStr): ResponseInterface
     {
+        $this->withAuth();
         Session::putRedirectData($this->getBody());
         return $this->getResponse()->withHeader('Location', $urlStr);
     }
