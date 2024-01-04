@@ -22,7 +22,7 @@ class UserRepository extends Repository
         $isWithKeyword = (!is_null($keyword) && $keyword != '');
         $stmt = $this->connection->prepare((new Stringy())
             ->append('SELECT * FROM users')
-            ->append($isWithKeyword ? ' WHERE name LIKE :keyword'  : '')
+            ->append($isWithKeyword ? ' WHERE name LIKE :keyword OR email LIKE :keyword'  : '')
             ->append(' LIMIT :limit OFFSET :offset;')
             ->toString());
         if ($isWithKeyword) {
@@ -102,7 +102,7 @@ class UserRepository extends Repository
     public function create(User $user): int
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO users (id, name, email, password, created_at, updated_at, deactivated_at) VALUES (:id, :name, :email, :password, :created_at, :updated_at, :deactivated_at);'
+            'INSERT INTO users (id, name, email, password, created_at, updated_at, deactived_at) VALUES (:id, :name, :email, :password, :created_at, :updated_at, :deactived_at);'
         );
         $this->bindStatement($stmt, $user);
         $stmt->execute();
@@ -119,7 +119,7 @@ class UserRepository extends Repository
     public function update(User $user): int
     {
         $stmt = $this->connection->prepare(
-            'UPDATE users SET name = :name, email = :email, password = :password, created_at = :created_at, updated_at = :updated_at, deactivated_at = :deactivated_at WHERE id = :id'
+            'UPDATE users SET name = :name, email = :email, password = :password, created_at = :created_at, updated_at = :updated_at, deactived_at = :deactived_at WHERE id = :id'
         );
         $this->bindStatement($stmt, $user);
         $stmt->execute();
@@ -164,14 +164,14 @@ class UserRepository extends Repository
         $password = $user->getPassword();
         $createdAtStr = $user->getCreatedAt()->format('Y-m-d H:i:s');
         $updatedAtStr = $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null;
-        $deactivatedAtStr = $user->getDeactivatedAt() ? $user->getDeactivatedAt()->format('Y-m-d H:i:s') : null;
+        $deactivatedAtStr = $user->getDeactivedAt() ? $user->getDeactivedAt()->format('Y-m-d H:i:s') : null;
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, \PDO::PARAM_STR);
         $stmt->bindParam(':created_at', $createdAtStr, \PDO::PARAM_STR);
         $stmt->bindParam(':updated_at', $updatedAtStr, is_null($updatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
-        $stmt->bindParam(':deactivated_at', $deactivatedAtStr, is_null($deactivatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
+        $stmt->bindParam(':deactived_at', $deactivatedAtStr, is_null($deactivatedAtStr) ? \PDO::PARAM_NULL : \PDO::PARAM_STR);
         return $stmt;
     }
 }
