@@ -13,7 +13,7 @@ class UpdateForm extends UserForm
             'name' => 'required|min:2',
             'email' => 'required|email',
             'password' => 'required',
-            'deactived_at' => 'required|date:Y-m-d H:i:s',
+            'deactived_at' => 'nullable|date:Y-m-d H:i:s',
         ];
     }
 }
