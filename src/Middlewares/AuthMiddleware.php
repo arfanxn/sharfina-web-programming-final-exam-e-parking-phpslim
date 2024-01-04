@@ -32,6 +32,7 @@ class AuthMiddleware extends Middleware
             $payload = JWT::decode($token, new Key($jwtSetting['secret'], $jwtSetting['algorithm']));
 
             $request->withAttribute('auth', $payload);
+            $_SESSION['auth'] = $payload;
 
             $response = $next($request, $response);
             return $response;
