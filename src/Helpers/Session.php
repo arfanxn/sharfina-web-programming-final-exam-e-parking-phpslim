@@ -20,7 +20,7 @@ class Session
         }
 
         $auth = $_SESSION['auth'] ?? null;
-        return ($auth != null) ? json_decode(json_encode($auth, true)) : null;
+        return ($auth != null) ? json_decode(json_encode($auth, true), true) : null;
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php
 
 use App\Controllers\DashboardController;
+use App\Controllers\ParkedVehicleController;
 use App\Controllers\UserController;
+use App\Controllers\VehicleController;
 use Slim\App;
 
 return function (App $app) {
@@ -41,8 +43,8 @@ return function (App $app) {
         /**
          *  User routes
          */
+        $app->map(['POST', 'GET', 'DELETE'], '/users/handle-logout', UserController::class . ':handleLogout');
         $app->group('/users', function (App $app) {
-            $app->map(['POST', 'GET', 'DELETE'], '/handle-logout', UserController::class . ':handleLogout');
             $app->get('', UserController::class . ':index');
             $app->get('/{id}', UserController::class . ':view');
             $app->get('//create', UserController::class . ':create');
@@ -50,6 +52,24 @@ return function (App $app) {
             $app->get('/{id}/edit', UserController::class . ':edit');
             $app->map(['POST', 'PUT'], '/{id}/handle-edit', UserController::class . ':update');
             $app->map(['POST', 'DELETE'], '/{id}/handle-delete', UserController::class . ':destroy');
+        })->add(\App\Middlewares\AdminMiddleware::class);
+
+        /**
+         *  Parked Vehicle routes
+         */
+        $app->group('/parked-vehicles', function (App $app) {
+            $app->get('', ParkedVehicleController::class . ':index');
+            $app->get('/{id}', ParkedVehicleController::class . ':view');
+            $app->get('//enter', ParkedVehicleController::class . ':enter');
+            $app->post('//handle-enter', ParkedVehicleController::class . ':handleEnter');
+            $app->map(['POST', 'GET', 'PUT',], '/{id}/toggle-left', ParkedVehicleController::class . ':toggleLeft');
+        });
+
+        /**
+         *  Vehicle routes
+         */
+        $app->group('/vehicles', function (App $app) {
+            $app->get('/{id}', VehicleController::class . ':view');
         });
     })->add(\App\Middlewares\AuthMiddleware::class);
 };

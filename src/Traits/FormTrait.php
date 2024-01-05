@@ -41,7 +41,7 @@ trait FormTrait
         foreach ($this->getRules() as $key => $_) {
             $camelCasedKey = Stringy::create($key)->camelize();
             $setterMethodName = 'set' . ucfirst($camelCasedKey);
-            $value = $data[$key];
+            $value = $data[$key] ?? null;
             $this->$setterMethodName($value);
         }
         $this->setData($data); // sets the data

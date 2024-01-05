@@ -3,6 +3,7 @@
 namespace App\Middlewares;
 
 use App\Handlers\ResponseHandler;
+use App\Helpers\Session;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Firebase\JWT\JWT;
@@ -32,7 +33,7 @@ class AuthMiddleware extends Middleware
             $payload = JWT::decode($token, new Key($jwtSetting['secret'], $jwtSetting['algorithm']));
 
             $request->withAttribute('auth', $payload);
-            $_SESSION['auth'] = $payload;
+            Session::auth($payload);
 
             $response = $next($request, $response);
             return $response;

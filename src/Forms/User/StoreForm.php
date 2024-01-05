@@ -6,8 +6,6 @@ class StoreForm extends UserForm
 {
     use \App\Traits\FormTrait;
 
-    private string $confirmationPassword;
-
     public function getRules(): array
     {
         return [

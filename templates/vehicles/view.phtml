@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fanparking | View User</title>
+    <title>Fanparking | View Vehicle</title>
     <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <style>
         /* Your custom styles here */
@@ -51,7 +51,7 @@
 
         <main class="bg-white flex-col w-8/12 space-y-4 p-6">
             <div class="flex flex-row justify-between">
-                <h1 class="text-3xl font-semibold text-black">View User</h1>
+                <h1 class="text-3xl font-semibold text-black">View Vehicle</h1>
             </div>
 
             <div class="border border-black"></div>
@@ -75,12 +75,13 @@
             <?php endif; ?>
 
             <div class="flex flex-col space-y-2">
-                <h1 class="text-2xl font-semibold text-black">Id: <?= htmlspecialchars($user['id']) ?></h1>
-                <h1 class="text-2xl font-semibold text-black">Name: <?= htmlspecialchars($user['name']) ?></h1>
-                <h1 class="text-2xl font-semibold text-black">Email: <?= htmlspecialchars($user['email']) ?></h1>
-                <h1 class="text-2xl font-semibold text-black">Created At: <?= htmlspecialchars($user['created_at']) ?></h1>
-                <h1 class="text-2xl font-semibold text-black">Updated At: <?= htmlspecialchars($user['updated_at'] ?? '-') ?></h1>
-                <h1 class="text-2xl font-semibold text-black">Deactived At: <?= htmlspecialchars($user['deactived_at'] ?? '-') ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Id: <?= htmlspecialchars($vehicle['id']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">
+                    Color: <?= htmlspecialchars(ucfirst($vehicle['vehicle_color']['name'])) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Type: <?= htmlspecialchars($vehicle['vehicle_type']['type']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Rate Per Hour: <?= htmlspecialchars($vehicle['vehicle_rate_per_hour']['rate']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Created At: <?= htmlspecialchars($vehicle['created_at'] ?? '-') ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Updated At: <?= htmlspecialchars($vehicle['updated_at'] ?? '-') ?></h1>
             </div>
         </main>
     </main>

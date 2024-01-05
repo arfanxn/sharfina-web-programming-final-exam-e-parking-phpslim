@@ -36,8 +36,8 @@ class ResponseHandler extends Handler
 
     public function withAuth()
     {
-        if ($auth = $_SESSION['auth'] ?? null) {
-            $this->appendBody('auth', json_decode(json_encode($auth), true));
+        if ($auth = Session::auth()) {
+            $this->appendBody('auth', $auth);
         }
     }
 

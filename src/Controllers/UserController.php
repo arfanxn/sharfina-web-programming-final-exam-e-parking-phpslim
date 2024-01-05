@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Forms\PaginationForm;
 use App\Forms\User\LoginForm;
 use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
@@ -64,16 +65,14 @@ class UserController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        $params = $request->getQueryParams();
-        $page = intval($params['page'] ?? 1);
-        $perPage = intval($params['per_page'] ?? 10);
-        $keyword = $params['keyword'] ?? null;
+        $form = PaginationForm::newFromRequest($request);
+        $form->validate();
 
-        $pagination = $this->userService->paginate($page, $perPage, $keyword);
+        $pagination = $this->userService->paginate($form);
 
         $doesPaginationHaveData = !empty($pagination->getData());
         $statusCode = $doesPaginationHaveData ? 200 : 404;
-        $message = $doesPaginationHaveData ? 'Successfully retrieved users.' : 'Data were not found';
+        $message = $doesPaginationHaveData ? 'Successfully retrieved users.' : 'Data were not found.';
 
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
@@ -116,7 +115,7 @@ class UserController extends Controller
             ->setStatusCode(201)
             ->setMessage('Successfully created user.')
             ->appendBody('user', $resource->toArray())
-            ->redirect('/users');
+            ->redirect($_SERVER['HTTP_REFERER'] ?? '/users');
     }
 
     public function edit(Request $request, Response $response): Response
@@ -143,7 +142,7 @@ class UserController extends Controller
             ->setStatusCode(200)
             ->setMessage('Successfully updated user.')
             ->appendBody('user', $resource->toArray())
-            ->redirect('/users');
+            ->redirect($_SERVER['HTTP_REFERER'] ?? '/users');
     }
 
     public function destroy(Request $request, Response $response): Response
@@ -155,6 +154,6 @@ class UserController extends Controller
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully deleted user.')
-            ->redirect('/users');
+            ->redirect($_SERVER['HTTP_REFERER'] ?? '/users');
     }
 }

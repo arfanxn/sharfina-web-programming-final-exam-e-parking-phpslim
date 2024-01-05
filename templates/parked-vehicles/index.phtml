@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fanparking | Users</title>
+    <title>Fanparking | Parked Vehicles</title>
     <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <style>
         /* Your custom styles here */
@@ -51,16 +51,16 @@
 
         <main class="bg-white flex-col w-8/12 space-y-4 p-6">
             <div class="flex flex-row justify-between">
-                <h1 class="text-3xl font-semibold text-black">Users</h1>
-                <a href="/users//create" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
-                    Create
+                <h1 class="text-3xl font-semibold text-black">Parked Vehicles</h1>
+                <a href="/parked-vehicles//enter" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
+                    Enter Vehicle
                 </a>
             </div>
 
             <form class="flex flex-row space-x-4" method="" action="">
                 <div class="w-full">
                     <label for="keyword" class="block text-sm font-semibold">Search</label>
-                    <input type="text" id="keyword" name="keyword" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" value="<?= htmlspecialchars($pagination['keyword'] ?? '') ?>" placeholder="Name or email">
+                    <input type="text" id="keyword" name="keyword" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" value="<?= htmlspecialchars($pagination['keyword'] ?? '') ?>" placeholder="Plate number">
                 </div>
                 <div class="mt-auto">
                     <button type="submit" class="block bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
@@ -92,26 +92,34 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap py-2 px-4 border-b">Id</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Name</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Email</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Created at</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Updated at</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Deactivated at</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Vehicle id</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Plate number</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Entered by user id</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Entered at</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Left by user id</th>
+                            <th class="text-nowrap py-2 px-4 border-b">Left at</th>
                             <th class="text-nowrap py-2 px-4 border-b">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($pagination['data'] as $user) { ?>
+                        <?php foreach ($pagination['data'] as $pv) { ?>
                             <tr>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['id']; ?></td>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['name']; ?></td>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['email']; ?></td>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['created_at']; ?></td>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['updated_at'] ?? '-'; ?></td>
-                                <td class="text-nowrap py-2 px-4 border-b"><?= $user['deactived_at'] ?? '-'; ?></td>
-                                <td class="flex py-2 px-4 border-b">
-                                    <a href="/users/<?= $user['id'] ?>/edit" class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-2 px-4 rounded-md transition duration-300 ease-in-out">
-                                        Edit
+                                <td class="text-nowrap py-2 px-4 border-b"><?= $pv['id']; ?></td>
+                                <td class="text-nowrap py-2 px-4 border-b">
+                                    <a class="block w-full h-full" href="/vehicles/<?= $pv['vehicle_id']; ?>"><?= $pv['vehicle_id']; ?></a>
+                                </td>
+                                <td class="text-nowrap py-2 px-4 border-b"><?= $pv['plate_number']; ?></td>
+                                <td class="text-nowrap py-2 px-4 border-b">
+                                    <a class="block w-full h-full" href="/users/<?= $pv['entered_by_user_id']; ?>"><?= $pv['entered_by_user_id']; ?></a>
+                                </td>
+                                <td class="text-nowrap py-2 px-4 border-b"><?= $pv['entered_at'] ?? '-'; ?></td>
+                                <td class="text-nowrap py-2 px-4 border-b">
+                                    <a class="block w-full h-full" href="/users/<?= $pv['left_by_user_id']; ?>"><?= $pv['left_by_user_id'] ?? '-'; ?></a>
+                                </td>
+                                <td class="text-nowrap py-2 px-4 border-b"><?= $pv['left_at'] ?? '-'; ?></td>
+                                <td class="text-nowrap flex py-2 px-4 border-b">
+                                    <a href="/parked-vehicles/<?= $pv['id'] ?>/toggle-left" class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                                        Toogle Left
                                     </a>
                                 </td>
                             </tr>
@@ -142,32 +150,6 @@
 
         });
     </script>
-
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteBtns = document.getElementsByClassName('delete-btn');
-            for (let i = 0; i < deleteBtns.length; i++) {
-                deleteBtns[i].addEventListener('click', async (event) => {
-                    const user = JSON.parse(event.target.getAttribute('user'));
-                    user.deactived_at = user.deactived_at == null ? formatDateToYYYYMMDDHHMMSS(new Date()) : null
-                    const formData = new URLSearchParams();
-                    for (let key in user) {
-                        formData.append(key, user[key]);
-                    }
-                    const response = await fetch(`/users/${user.id}/handle-update`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: formData,
-                    })
-                    console.log(response);
-                    return
-                    location.reload();
-                })
-            }
-        });
-    </script> -->
 </body>
 
 </html>

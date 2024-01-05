@@ -19,7 +19,7 @@ class User extends Model implements ResourceableInterface
 
     public function __construct()
     {
-        $this->setColumns([
+        $this->setTable('users')->setColumns([
             'id',
             'name',
             'email',

@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Forms\PaginationForm;
 use App\Forms\User\LoginForm;
 use App\Forms\User\StoreForm;
 use App\Forms\User\UpdateForm;
+use App\Helpers\Session;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Resources\Pagination;
@@ -47,17 +49,15 @@ class UserService extends Service
         }
 
         $jwtSetting = $this->getContainer()->get('settings')['jwt'];
-        $token = JWT::encode(
-            [
-                'id' => $user->getId(),
-                'name' => $user->getName(),
-                'email' => $user->getEmail(),
-                'iat' => time(),
-                'exp' => time() + intval($jwtSetting['exp_in']),
-            ],
-            $jwtSetting['secret'],
-            $jwtSetting['algorithm']
-        );
+        $auth = [
+            'id' => $user->getId(),
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'iat' => time(),
+            'exp' => time() + intval($jwtSetting['exp_in']),
+        ];
+        $token = JWT::encode($auth, $jwtSetting['secret'], $jwtSetting['algorithm']);
+        Session::auth($auth);
 
         return $token;
     }
@@ -65,21 +65,18 @@ class UserService extends Service
     /**
      * paginate 
      *
-     * @param int $page
-     * @param int $perPage
-     * @param ?string $keyword
+     * @param PaginationForm $form
      * @return Pagination
      * @throws \PDOException
      */
-    public function paginate(int $page, int $perPage, ?string $keyword = null): Pagination
+    public function paginate(PaginationForm $form): Pagination
     {
-        $limit = $perPage;
-        $offset = ($page - 1) * $perPage;
-        $users = $this->userRepository->paginate($limit, $offset, $keyword);
+        $users = $this->userRepository->paginate($form->getLimit(), $form->getOffset(), $form->getKeyword());
         $resources = array_map(function (User $user) {
             return new UserResource($user);
         }, $users);
-        return Pagination::new()->fillMetadata($page, $perPage, $keyword)->setData($resources);
+        return Pagination::new()->fillMetadata($form->getPage(), $form->getPerPage(), $form->getKeyword())
+            ->setData($resources);
     }
 
     /**
