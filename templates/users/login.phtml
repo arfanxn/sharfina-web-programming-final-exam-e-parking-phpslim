@@ -24,16 +24,20 @@
             <div class="px-8 py-8">
 
                 <form class="flex flex-col space-y-4" method="post" action="/users/handle-login" enctype="multipart/form-data">
-                    <?php if (isset($status_code) && in_array($status_code, [401, 422])) : ?>
-                        <div id="errorMessageContainer" class="p-1 border border-red-400 bg-red-300/25 rounded flex justify-between">
+                    <?php if (
+                        (isset($status_code) && isset($message)) &&
+                        in_array($status_code, array_merge(range(201, 299), [401, 422]))
+                    ) : ?>
+                        <div id="messageContainer" class="col-span-2 p-1 border rounded flex justify-between 
+                        <?= in_array($status_code, range(201, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
                             <div>
-                                <span class="text-red-500">&#9888;</span>
-                                <small class="font-semibold text-xs text-red-500">
+                                <span class="">&#9888;</span>
+                                <small class="font-semibold text-xs">
                                     <?= htmlspecialchars($message); ?>
                                 </small>
                             </div>
                             <div class="">
-                                <button id="errorMessageCloseBtn" type="button"><span class="text-red-500">&#10005;</span></button>
+                                <button id="messageContainerCloseBtn" type="button"><span class="">&#10005;</span></button>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -56,9 +60,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            (document.getElementById("errorMessageContainer")).addEventListener("click", function() {
-                document.getElementById('errorMessageContainer').remove();
+            (document.getElementById("messageContainerCloseBtn")).addEventListener("click", function() {
+                document.getElementById('messageContainer').remove();
             });
 
         });
