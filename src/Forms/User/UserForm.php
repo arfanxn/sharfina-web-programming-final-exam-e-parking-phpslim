@@ -7,7 +7,7 @@ class UserForm
     private int $id;
     private string $name;
     private string $email;
-    private string $password;
+    private ?string $password;
     private ?\DateTime $deactivedAt;
 
     public function getId(): int
@@ -40,11 +40,11 @@ class UserForm
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
-        return $this->password;
+        return isset($this->password) && $this->password != '' ? $this->password : null;
     }
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
         return $this;
