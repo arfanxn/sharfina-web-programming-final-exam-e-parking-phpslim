@@ -42,7 +42,7 @@ return function (App $app) {
          *  User routes
          */
         $app->group('/users', function (App $app) {
-            $app->delete('/handle-logout', UserController::class . ':handleLogout');
+            $app->map(['POST', 'GET', 'DELETE'], '/handle-logout', UserController::class . ':handleLogout');
             $app->get('', UserController::class . ':index');
             $app->get('/{id}', UserController::class . ':view');
             $app->get('//create', UserController::class . ':create');
