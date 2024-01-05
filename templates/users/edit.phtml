@@ -4,30 +4,105 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fanparking | User Edit</title>
+    <title>Fanparking | Edit User</title>
     <link href="//fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <style>
         /* Your custom styles here */
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/assets/js/helpers.js"></script>
 </head>
 
 <body>
-    <h1 class="text-8xl">Users Edit</h1>
-    <?php if (isset($status_code)) : ?>
-        <p class="">Status code: <?= $status_code; ?></p>
-    <?php endif; ?>
-    <?php if (isset($status_text)) : ?>
-        <p class="">Status text: <?= $status_text; ?></p>
-    <?php endif; ?>
-    <?php if (isset($message)) : ?>
-        <p class="">Message: <?= $message; ?></p>
-    <?php endif; ?>
+    <main class="flex w-full min-h-screen ">
+        <nav class="flex flex-col items-center w-4/12">
+            <section class="flex flex-col items-center space-y-2 w-full bg-teal-600 py-12">
+                <div class="flex items-center bg-white rounded-full overflow-hidden p-3">
+                    <img class="h-28 w-28 rounded-full" src="/assets/images/avatar.png" alt="">
+                </div>
+                <h1 class="text-3xl font-semibold text-white"><?= htmlspecialchars($auth['name']) ?></h1>
+            </section>
+            <div class="border"></div>
+            <section class="flex flex-col w-full bg-teal-600 p-4">
+                <ul class="flex flex-col w-full space-y-4">
+                    <li>
+                        <a class="text-2xl font-semibold text-white" href="/parked-vehicles">
+                            Parked Vehicles
+                        </a>
+                    </li>
+                    <?php if (\Stringy\Stringy::create($auth['email'] ?? '')->contains('admin')) : ?>
+                        <li>
+                            <a class="text-2xl font-semibold text-white" href="">
+                                Users
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </section>
+            <div class="border"></div>
+            <section class="flex flex-col w-full h-full bg-teal-600 p-4">
+                <form class="" method="POST" action="/users/handle-logout" enctype="multipart/form-data">
+                    <button type="submit" class="text-2xl font-semibold text-white">
+                        Logout
+                    </button>
+                </form>
+            </section>
+        </nav>
 
-    <?php if (isset($user)) : ?>
-        <br><br>
-        <p class="">User: <?= print_r($user); ?></p>
-    <?php endif; ?>
+        <main class="bg-white flex-col w-8/12 space-y-4 p-6">
+            <div class="flex flex-row justify-between">
+                <h1 class="text-3xl font-semibold text-black">Edit User</h1>
+            </div>
+
+            <form class="grid grid-cols-2 gap-4" method="POST" action="/users/<?= $user['id'] ?>/handle-edit" enctype="multipart/form-data">
+                <?php if (
+                    (isset($status_code) && isset($message)) &&
+                    in_array($status_code, array_merge(range(200, 299), [422]))
+                ) : ?>
+                    <div id="messageContainer" class="col-span-2 p-1 border rounded flex justify-between 
+                        <?= in_array($status_code, range(200, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
+                        <div>
+                            <span class=""><?= in_array($status_code, range(200, 299)) ? '&#10003;' : '&#9888;' ?></span>
+                            <small class="font-semibold text-xs">
+                                <?= htmlspecialchars($message); ?>
+                            </small>
+                        </div>
+                        <div class="">
+                            <button id="messageContainerCloseBtn" type="button"><span class="">&#10005;</span></button>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="">
+                    <label for="name" class="block text-sm font-semibold">Name</label>
+                    <input type="text" id="name" name="name" value="<?= $user['name'] ?>" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" required placeholder="Name">
+                </div>
+                <div class="">
+                    <label for="email" class="block text-sm font-semibold">Email</label>
+                    <input type="text" id="email" name="email" value="<?= $user['email'] ?>" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" required placeholder="example@domain.com">
+                </div>
+                <div class="">
+                    <label for="password" class="block text-sm font-semibold">Password</label>
+                    <input type="password" id="password" name="password" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" placeholder="Keep it empty or a enter new password">
+                </div>
+                <div class="">
+                    <label for="deactived_at" class="block text-sm font-semibold">Deactived At</label>
+                    <input type="date" id="deactived_at" name="deactived_at" value="<?= isset($user['deactived_at']) ? (new DateTime($user['deactived_at']))->format('Y-m-d') : '' ?>" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" placeholder="2020-12-30 20:00:00 or empty">
+                </div>
+                <div class="flex col-span-2">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-teal-700/25 focus:border-teal-300  transition duration-300 ease-in-out ml-auto">Save</button>
+                </div>
+            </form>
+        </main>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            (document.getElementById("messageContainerCloseBtn")).addEventListener("click", function() {
+                document.getElementById('messageContainer').remove();
+            });
+
+        });
+    </script>
 </body>
 
 </html>

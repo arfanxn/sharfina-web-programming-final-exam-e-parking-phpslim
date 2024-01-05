@@ -10,6 +10,7 @@
         /* Your custom styles here */
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/assets/js/helpers.js"></script>
 </head>
 
 <body>
@@ -19,90 +20,69 @@
                 <div class="flex items-center bg-white rounded-full overflow-hidden p-3">
                     <img class="h-28 w-28 rounded-full" src="/assets/images/avatar.png" alt="">
                 </div>
-                <h1 class="text-3xl font-semibold text-white">Muhammad Arfan</h1>
-
-
-
-                <!-- <form action="">
-                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-teal-700/25 focus:border-teal-300  transition duration-300 ease-in-out">Search</button>
-                </form> -->
+                <h1 class="text-3xl font-semibold text-white"><?= htmlspecialchars($auth['name']) ?></h1>
             </section>
             <div class="border"></div>
-            <section class="flex flex-col w-full h-full bg-teal-600">
-                <ul class="flex flex-col w-full space-y-4 p-4">
+            <section class="flex flex-col w-full bg-teal-600 p-4">
+                <ul class="flex flex-col w-full space-y-4">
                     <li>
-                        <a href="">
-                            <h1 class="text-2xl font-semibold text-white">Parked Vehicles</h1>
+                        <a class="text-2xl font-semibold text-white" href="/parked-vehicles">
+                            Parked Vehicles
                         </a>
                     </li>
-                    <li>
-                        <a href="">
-                            <h1 class="text-2xl font-semibold text-white">Users</h1>
-                        </a>
-                    </li>
+                    <?php if (\Stringy\Stringy::create($auth['email'] ?? '')->contains('admin')) : ?>
+                        <li>
+                            <a class="text-2xl font-semibold text-white" href="/users">
+                                Users
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </section>
-
-
-
+            <div class="border"></div>
+            <section class="flex flex-col w-full h-full bg-teal-600 p-4">
+                <form class="" method="POST" action="/users/handle-logout" enctype="multipart/form-data">
+                    <button type="submit" class="text-2xl font-semibold text-white">
+                        Logout
+                    </button>
+                </form>
+            </section>
         </nav>
+
         <main class="bg-white flex-col w-8/12 space-y-4 p-6">
+
             <div class="flex flex-row justify-between">
-                <h1 class="text-3xl font-semibold text-black">Users</h1>
-                <a href="/users//create" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
-                    Create
-                </a>
+                <h1 class="text-3xl font-semibold text-black">Dashboard</h1>
             </div>
 
-            <form class="flex flex-row space-x-4" action="">
-                <div class="w-full">
-                    <label for="keyword" class="block text-sm font-semibold">Search</label>
-                    <input type="text" id="keyword" name="keyword" class="w-full p-2 border rounded-lg border-gray-400 focus:outline-gray-600 bg-gray-300/25" placeholder="Keyword">
+            <?php if (
+                (isset($status_code) && isset($message)) &&
+                in_array($status_code, array_merge(range(200, 299), [404, 422]))
+            ) : ?>
+                <div id="messageContainer" class="p-1 border rounded flex justify-between 
+                        <?= in_array($status_code, range(200, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
+                    <div>
+                        <span class=""><?= in_array($status_code, range(200, 299)) ? '&#10003;' : '&#9888;' ?></span>
+                        <small class="font-semibold text-xs">
+                            <?= htmlspecialchars($message); ?>
+                        </small>
+                    </div>
+                    <div class="">
+                        <button id="messageContainerCloseBtn" type="button"><span class="">&#10005;</span></button>
+                    </div>
                 </div>
-                <div class="mt-auto">
-                    <a href="/users//create" class="block bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded">
-                        Search
-                    </a>
-                </div>
-            </form>
-
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-300 rounded">
-                    <thead>
-                        <tr>
-                            <th class="text-nowrap py-2 px-4 border-b">Id</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Name</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Email</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Created at</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Updated at</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Deactivated at</th>
-                            <th class="text-nowrap py-2 px-4 border-b">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-nowrap py-2 px-4 border-b">1</td>
-                            <td class="text-nowrap py-2 px-4 border-b">Jack Dorsey</td>
-                            <td class="text-nowrap py-2 px-4 border-b">john@example.com</td>
-                            <td class="text-nowrap py-2 px-4 border-b">2020-20-12 00:00</td>
-                            <td class="text-nowrap py-2 px-4 border-b">2020-20-12 00:00</td>
-                            <td class="text-nowrap py-2 px-4 border-b"></td>
-                            <td class="flex py-2 px-4 border-b ">
-                                <button class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white py-2 px-4 rounded-md transition duration-300 ease-in-out">
-                                    Edit
-                                </button>
-                                <button class="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white py-2 px-4 rounded-md transition duration-300 ease-in-out">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
-
-            </div>
+            <?php endif; ?>
         </main>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            (document.getElementById("messageContainerCloseBtn")).addEventListener("click", function() {
+                document.getElementById('messageContainer').remove();
+            });
+
+        });
+    </script>
 </body>
 
 </html>
