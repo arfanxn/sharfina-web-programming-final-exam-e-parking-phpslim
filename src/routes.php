@@ -48,8 +48,8 @@ return function (App $app) {
             $app->get('//create', UserController::class . ':create');
             $app->post('//handle-create', UserController::class . ':store');
             $app->get('/{id}/edit', UserController::class . ':edit');
-            $app->put('/{id}/handle-edit', UserController::class . ':update');
-            $app->put('/{id}/handle-toogle-deactived-at', UserController::class . ':destroy');
+            $app->map(['POST', 'PUT'], '/{id}/handle-edit', UserController::class . ':update');
+            $app->map(['POST', 'DELETE'], '/{id}/handle-toogle-deactived-at', UserController::class . ':destroy');
             // $app->delete('/{id}/handle-delete', UserController::class . ':destroy');
         });
     })->add(\App\Middlewares\AuthMiddleware::class);
