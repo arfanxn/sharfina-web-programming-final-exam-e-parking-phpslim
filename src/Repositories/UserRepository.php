@@ -23,7 +23,7 @@ class UserRepository extends Repository
         $stmt = $this->connection->prepare((new Stringy())
             ->append('SELECT * FROM users')
             ->append($isWithKeyword ? ' WHERE name LIKE :keyword OR email LIKE :keyword'  : '')
-            ->append(' LIMIT :limit OFFSET :offset;')
+            ->append(' ORDER BY created_at DESC LIMIT :limit OFFSET :offset')
             ->toString());
         if ($isWithKeyword) {
             $keyword = '%' . $keyword . '%';
