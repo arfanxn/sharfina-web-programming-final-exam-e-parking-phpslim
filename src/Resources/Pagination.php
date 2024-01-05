@@ -77,6 +77,16 @@ class Pagination implements \App\Interfaces\ArrayableInterface
         $this->data = $data;
         return $this;
     }
+    /**
+     * getData
+     * 
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
 
     public function toArray(): array
     {
