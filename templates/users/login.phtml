@@ -26,12 +26,12 @@
                 <form class="flex flex-col space-y-4" method="post" action="/users/handle-login" enctype="multipart/form-data">
                     <?php if (
                         (isset($status_code) && isset($message)) &&
-                        in_array($status_code, array_merge(range(201, 299), [401, 422]))
+                        in_array($status_code, array_merge(range(200, 299), [401, 422]))
                     ) : ?>
                         <div id="messageContainer" class="col-span-2 p-1 border rounded flex justify-between 
-                        <?= in_array($status_code, range(201, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
+                        <?= in_array($status_code, range(200, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
                             <div>
-                                <span class="">&#9888;</span>
+                                <span class=""><?= in_array($status_code, range(200, 299)) ? '&#10003;' : '&#9888;' ?></span>
                                 <small class="font-semibold text-xs">
                                     <?= htmlspecialchars($message); ?>
                                 </small>
