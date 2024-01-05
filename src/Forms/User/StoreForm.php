@@ -13,8 +13,8 @@ class StoreForm extends UserForm
         return [
             'name' => 'required|min:2',
             'email' => 'required|email',
-            'password' => 'required',
-            'deactived_at' => 'nullable|date:Y-m-d H:i:s',
+            'password' => 'required|min:8',
+            'deactived_at' => 'nullable|date:Y-m-d',
         ];
     }
 }
