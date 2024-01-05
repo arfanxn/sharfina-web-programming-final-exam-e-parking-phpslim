@@ -59,7 +59,7 @@ class UserForm
         if (is_null($deactivedAt) || $deactivedAt == '') {
             $this->deactivedAt = null;
         } else if (is_string($deactivedAt)) {
-            $this->deactivedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $deactivedAt);
+            $this->deactivedAt = \DateTime::createFromFormat('Y-m-d', $deactivedAt);
         } else if ($deactivedAt instanceof \DateTime) {
             $this->deactivedAt = $deactivedAt;
         }
