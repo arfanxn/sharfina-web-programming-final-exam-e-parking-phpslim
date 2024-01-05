@@ -56,12 +56,12 @@ class UserForm
     }
     public function setDeactivedAt(mixed $deactivedAt): self
     {
-        if (is_string($deactivedAt)) {
+        if (is_null($deactivedAt) || $deactivedAt == '') {
+            $this->deactivedAt = null;
+        } else if (is_string($deactivedAt)) {
             $this->deactivedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $deactivedAt);
         } else if ($deactivedAt instanceof \DateTime) {
             $this->deactivedAt = $deactivedAt;
-        } else {
-            $this->deactivedAt = null;
         }
         return $this;
     }
