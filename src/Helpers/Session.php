@@ -8,6 +8,22 @@ namespace App\Helpers;
 class Session
 {
     /**
+     * auth returns the current logged in user information or set the current logged in user information
+     *
+     * @param mixed $user
+     * @return ?array
+     */
+    public static function auth(mixed $auth = null): ?array
+    {
+        if (($auth) != null) {
+            $_SESSION['auth'] = $auth;
+        }
+
+        $auth = $_SESSION['auth'] ?? null;
+        return ($auth != null) ? json_decode(json_encode($auth, true)) : null;
+    }
+
+    /**
      * pullRedirectData returns the redirect data associated with the session then deletes it
      *
      * @return array
