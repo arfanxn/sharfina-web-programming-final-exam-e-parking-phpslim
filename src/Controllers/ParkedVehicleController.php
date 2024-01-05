@@ -57,7 +57,7 @@ class ParkedVehicleController extends Controller
             ->setResponse($response)
             ->setStatusCode(200)
             ->setMessage('Successfully retrieved parked vehicle.')
-            ->appendBody('user', $resource->toArray())
+            ->appendBody('parked_vehicle', $resource->toArray())
             ->render('parked-vehicles/view.phtml');
     }
 

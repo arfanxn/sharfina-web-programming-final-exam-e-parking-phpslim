@@ -10,24 +10,90 @@
         /* Your custom styles here */
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/assets/js/helpers.js"></script>
 </head>
 
 <body>
-    <h1 class="text-8xl">View Parked Vehicle</h1>
-    <?php if (isset($status_code)) : ?>
-        <p class="">Status code: <?= $status_code; ?></p>
-    <?php endif; ?>
-    <?php if (isset($status_text)) : ?>
-        <p class="">Status text: <?= $status_text; ?></p>
-    <?php endif; ?>
-    <?php if (isset($message)) : ?>
-        <p class="">Message: <?= $message; ?></p>
-    <?php endif; ?>
+    <main class="flex w-full min-h-screen ">
+        <nav class="flex flex-col items-center w-4/12">
+            <section class="flex flex-col items-center space-y-2 w-full bg-teal-600 py-12">
+                <div class="flex items-center bg-white rounded-full overflow-hidden p-3">
+                    <img class="h-28 w-28 rounded-full" src="/assets/images/avatar.png" alt="">
+                </div>
+                <h1 class="text-3xl font-semibold text-white"><?= htmlspecialchars($auth['name']) ?></h1>
+            </section>
+            <div class="border"></div>
+            <section class="flex flex-col w-full bg-teal-600 p-4">
+                <ul class="flex flex-col w-full space-y-4">
+                    <li>
+                        <a class="text-2xl font-semibold text-white" href="/parked-vehicles">
+                            Parked Vehicles
+                        </a>
+                    </li>
+                    <?php if (\Stringy\Stringy::create($auth['email'] ?? '')->contains('admin')) : ?>
+                        <li>
+                            <a class="text-2xl font-semibold text-white" href="">
+                                Users
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </section>
+            <div class="border"></div>
+            <section class="flex flex-col w-full h-full bg-teal-600 p-4">
+                <form class="" method="POST" action="/users/handle-logout" enctype="multipart/form-data">
+                    <button type="submit" class="text-2xl font-semibold text-white">
+                        Logout
+                    </button>
+                </form>
+            </section>
+        </nav>
 
-    <?php if (isset($parked_vehicle)) : ?>
-        <br><br>
-        <p class="">Parked Vehicle: <?= print_r($parked_vehicle); ?></p>
-    <?php endif; ?>
+        <main class="bg-white flex-col w-8/12 space-y-4 p-6">
+            <div class="flex flex-row justify-between">
+                <h1 class="text-3xl font-semibold text-black">View Parked Vehicle</h1>
+            </div>
+
+            <div class="border border-black"></div>
+
+            <?php if (
+                (isset($status_code) && isset($message)) &&
+                in_array($status_code, array_merge(range(200, 299), [404, 422]))
+            ) : ?>
+                <div id="messageContainer" class="col-span-2 p-1 border rounded flex justify-between 
+                        <?= in_array($status_code, range(200, 299)) ? 'border-green-400 bg-green-300/25 text-green-500' : 'border-red-400 bg-red-300/25 text-red-500' ?>">
+                    <div>
+                        <span class=""><?= in_array($status_code, range(200, 299)) ? '&#10003;' : '&#9888;' ?></span>
+                        <small class="font-semibold text-xs">
+                            <?= htmlspecialchars($message); ?>
+                        </small>
+                    </div>
+                    <div class="">
+                        <button id="messageContainerCloseBtn" type="button"><span class="">&#10005;</span></button>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="flex flex-col space-y-2">
+                <h1 class="text-2xl font-semibold text-black">Id: <?= htmlspecialchars($parked_vehicle['id']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Vehicle Id: <?= htmlspecialchars($parked_vehicle['vehicle_id']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Plate Number: <?= htmlspecialchars($parked_vehicle['plate_number']) ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Entered By User Id: <?= htmlspecialchars($parked_vehicle['entered_by_user_id'] ?? '-') ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Entered At: <?= htmlspecialchars($parked_vehicle['entered_at'] ?? '-') ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Left By User Id: <?= htmlspecialchars($parked_vehicle['left_by_user_id'] ?? '-') ?></h1>
+                <h1 class="text-2xl font-semibold text-black">Left At: <?= htmlspecialchars($parked_vehicle['left_at'] ?? '-') ?></h1>
+            </div>
+        </main>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            (document.getElementById("messageContainerCloseBtn")).addEventListener("click", function() {
+                document.getElementById('messageContainer').remove();
+            });
+
+        });
+    </script>
 </body>
 
 </html>
