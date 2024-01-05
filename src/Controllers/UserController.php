@@ -71,10 +71,14 @@ class UserController extends Controller
 
         $pagination = $this->userService->paginate($page, $perPage, $keyword);
 
+        $doesPaginationHaveData = !empty($pagination->getData());
+        $statusCode = $doesPaginationHaveData ? 200 : 404;
+        $message = $doesPaginationHaveData ? 'Successfully retrieved users.' : 'Data were not found';
+
         return ResponseHandler::new($this->getContainer())
             ->setResponse($response)
-            ->setStatusCode(200)
-            ->setMessage('Successfully retrieved users.')
+            ->setStatusCode($statusCode)
+            ->setMessage($message)
             ->appendBody('pagination', $pagination->toArray())
             ->render('users/index.phtml');
     }
@@ -139,7 +143,7 @@ class UserController extends Controller
             ->setStatusCode(200)
             ->setMessage('Successfully updated user.')
             ->appendBody('user', $resource->toArray())
-            ->redirect('/users/' . $form->getId() . '/edit');
+            ->redirect('/users');
     }
 
     public function destroy(Request $request, Response $response): Response

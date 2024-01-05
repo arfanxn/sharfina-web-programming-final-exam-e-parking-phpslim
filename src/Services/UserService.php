@@ -141,9 +141,8 @@ class UserService extends Service
 
         $user->setName($form->getName());
         $user->setEmail($form->getEmail());
-        if ($form->getPassword() != $user->getPassword()) {
-            $user->setPassword(password_hash($form->getPassword(), PASSWORD_BCRYPT));
-        }
+        $user->setPassword($form->getPassword() != null ?
+            password_hash($form->getPassword(), PASSWORD_BCRYPT) : $user->getPassword());
         $user->setUpdatedAt(new DateTime());
         $user->setDeactivedAt($form->getDeactivedAt());
 
