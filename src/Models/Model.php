@@ -8,6 +8,21 @@ use Stringy\Stringy;
 class Model implements ArrayableInterface
 {
     /**
+     * this represents the table name
+     */
+    protected string $table;
+
+    public function getTable(): string
+    {
+        return $this->table;
+    }
+    protected function setTable(string $table): self
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    /**
      * this represents the table columns
      */
     protected array $columns;
