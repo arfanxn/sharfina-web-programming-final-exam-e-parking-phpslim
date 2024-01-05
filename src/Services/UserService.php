@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Forms\PaginationForm;
-use App\Forms\User\LoginForm;
-use App\Forms\User\StoreForm;
-use App\Forms\User\UpdateForm;
+use App\Forms\Users\LoginForm;
+use App\Forms\Users\StoreForm;
+use App\Forms\Users\UpdateForm;
 use App\Helpers\Session;
 use App\Models\User;
 use App\Repositories\UserRepository;
