@@ -43,14 +43,6 @@ composer install --ignore-platform-reqs // to ignore the platform requirements
 composer install
 ```
 
-Install all npm/yarn dependencies
-
-```sh
-npm install
-// or
-yarn install
-```
-
 Create environtment file from example.env file
 
 ```sh
