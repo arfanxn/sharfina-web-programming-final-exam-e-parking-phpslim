@@ -38,17 +38,9 @@ Fanparking is an E-Parking application built with PHP, PHP Slim 3, Javascript, a
 Install all composer dependencies
 
 ```sh
-composer install --ignore-platform-reqs
+composer install --ignore-platform-reqs // to ignore the platform requirements
 // or
 composer install
-```
-
-Install all npm/yarn dependencies
-
-```sh
-npm install
-// or
-yarn install
 ```
 
 Create environtment file from example.env file
@@ -61,8 +53,8 @@ Migrate database;
 You have to migrate the database manually; the sql migration file is located at ./migration.sql and if necessary, you can seed the database with the sql seeder file that is located at ./seeder.sql
 
 ```sh
-cat ./migration.sql //  migration file
-cat ./seeder.sql // seeder file
+cat ./migration.sql | pbcopy //  migration file
+cat ./seeder.sql | pbcopy // seeder file
 ```
 
 ## Configuration
@@ -97,4 +89,19 @@ Start and run the server with this following command
 
 ```
  php -S localhost:8000 -t public
+```
+
+## Credentials
+
+Login with these following credentials
+
+```
+ // Admin credentials
+ email: admin@fanparking.com
+ password: password
+
+ // Employee credentials
+ email: ozey@gmail.com
+ password: password
+
 ```
